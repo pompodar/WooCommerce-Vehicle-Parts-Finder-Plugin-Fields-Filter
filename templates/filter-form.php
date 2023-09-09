@@ -1,11 +1,52 @@
 <?php
+/// Specify the custom taxonomy
+$taxonomy = 'product_make'; // Replace with your custom taxonomy name
+
+$make_options = array();
+$direct_children = array();
+
+// Get all terms from the custom taxonomy
+$all_terms = get_terms($taxonomy);
+
+if (!empty($all_terms) && !is_wp_error($all_terms)) {
+    foreach ($all_terms as $term) {
+        // Check if the term is a parent (has no parent)
+        if ($term->parent == 0) {
+            // Get the direct child terms for the parent
+            $child_term_args = array(
+                'taxonomy' => $taxonomy,
+                'parent' => $term->term_id,
+            );
+
+            $make_options[] = array(
+                $term->name
+            );
+            
+            $child_terms = get_terms($child_term_args);
+
+            $parent_children_names = array();
+            foreach ($child_terms as $child_term) {
+                $parent_children_names[] = $child_term->name;
+            }
+
+            // Add direct children to the result array
+            $direct_children[] = array(
+                'parent_name' => $term->name,
+                'children_names' => $parent_children_names,
+            );
+        }
+    }
+}
 ?>
 <form id="custom-filter-form">
     <!-- Make Filter -->
     <select id="make-filter" name="make">
         <option value="" disabled>Make</option>
-        <option value="make1">Make 1</option>
-        <option value="make2">Make 2</option>
+        <?php
+        foreach ($make_options as $value) {
+            echo '<option value="' . esc_attr($value[0]) . '">' . esc_html($value[0]) . '</option>';
+        }
+        ?>
         <!-- Add more options as needed -->
     </select>
 

@@ -53,14 +53,16 @@ function custom_filter_ajax_handler() {
             'meta_query' => array(),
         );
 
-        // Add meta query conditions based on selected criteria
+        // Add tax query conditions based on selected criteria
         if (!empty($filter_data['make'])) {
-            $args['meta_query'][] = array(
-                'key' => 'make',  // Replace with the actual custom field name for 'Make'
-                'value' => sanitize_text_field($filter_data['make']),
-                'compare' => '=',
+            $args['tax_query'][] = array(
+                'taxonomy' => 'product_make',  // 
+                'field' => 'name',  // You can use 'slug' or 'term_id' depending on your needs
+                'terms' => sanitize_text_field($filter_data['make']),
+                'operator' => 'IN',
             );
         }
+
 
         // Add similar meta query conditions for other filters (model, year, category, brand)
 
