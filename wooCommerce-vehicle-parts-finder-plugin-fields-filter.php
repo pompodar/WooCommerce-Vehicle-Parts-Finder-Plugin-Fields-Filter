@@ -25,9 +25,14 @@ add_action('wp_enqueue_scripts', 'custom_filter_enqueue_scripts');
 
 // Define the shortcode
 function custom_filter_shortcode() {
+    $atts = shortcode_atts(array(
+        'model_order_by' => 'default', // Default sorting option for model
+        'brand_order_by' => 'default', // Default sorting option for brand
+    ), $atts);
+
     ob_start(); // Start output buffering
 
-    // Include the HTML structure for the filter form
+    // Include the HTML structure for the filter form, passing the attributes
     include(plugin_dir_path(__FILE__) . 'templates/filter-form.php');
 
     return ob_get_clean(); // End output buffering and return content
@@ -66,7 +71,19 @@ function custom_filter_ajax_handler() {
         if ($products_query->have_posts()) {
             while ($products_query->have_posts()) {
                 $products_query->the_post();
-                // Display the product information here as needed
+                
+                // Display the product information here
+                $product_id = get_the_ID();
+                $product_title = get_the_title();
+                $product_price = get_post_meta($product_id, '_price', true);
+                $product_link = get_permalink();
+                
+                // You can format and customize the product output as needed
+                echo '<div class="product">';
+                echo '<h2><a href="' . esc_url($product_link) . '">' . esc_html($product_title) . '</a></h2>';
+                echo '<p>Price: ' . wc_price($product_price) . '</p>';
+                // Add more product information as necessary
+                echo '</div>';
             }
             wp_reset_postdata(); // Reset the post data
         } else {
