@@ -19,6 +19,9 @@ jQuery(document).ready(function ($) {
         $("#wvpfpff-spinner").show();
 
         const make = $("#make-filter").val();
+        
+        // TODO not 100% sure if correct
+        const model = $("#model-filter").val() ? $("#model-filter").val() : getCookie("model-filter");
 
         $.ajax({
             url: ajaxurl,
@@ -28,11 +31,20 @@ jQuery(document).ready(function ($) {
                 filter: filter,
                 parent: parentValue,
                 make,
+                model
             },
             success: function (response) {
                 $("#" + filter + "-filter").html(response);
                 $("#" + filter + "-filter").prop("disabled", false);
-                
+
+                // TODO not 100% sure if correct
+                // When the page loads, populate the form fields with saved values
+                $("#make-filter").val(getCookie("make-filter"));
+                $("#model-filter").val(getCookie("model-filter"));
+                $("#year-filter").val(getCookie("year-filter"));
+                $("#category-filter").val(getCookie("category-filter"));
+                $("#brand-filter").val(getCookie("brand-filter"));
+
                 // Hide the spinner after loading
                 $("#wvpfpff-spinner").hide();
             },
