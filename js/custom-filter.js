@@ -15,46 +15,59 @@ jQuery(document).ready(function ($) {
 
     // Function to load options for the dependent filters
     function loadOptions(filter, parentValue) {
+        // Show the spinner while loading
+        $("#wvpfpff-spinner").show();
+
+        const make = $("#make-filter").val();
+
         $.ajax({
             url: ajaxurl,
             type: "POST",
             data: {
-                action: "custom_filter_ajax_handler",
+                action: "custom_filter_itself_ajax_handler",
                 filter: filter,
                 parent: parentValue,
+                make,
             },
             success: function (response) {
                 $("#" + filter + "-filter").html(response);
                 $("#" + filter + "-filter").prop("disabled", false);
+                
+                // Hide the spinner after loading
+                $("#wvpfpff-spinner").hide();
+            },
+            complete: function () {
+                // Hide the spinner even if there was an error
+                $("#wvpfpff-spinner").hide();
             },
         });
     }
 
     // When the page loads, populate the form fields with saved values
-    $("#make-filter").val(getCookie("make"));
-    $("#model-filter").val(getCookie("model"));
-    $("#year-filter").val(getCookie("year"));
-    $("#category-filter").val(getCookie("category"));
-    $("#brand-filter").val(getCookie("brand"));
+    $("#make-filter").val(getCookie("make-filter"));
+    $("#model-filter").val(getCookie("model-filter"));
+    $("#year-filter").val(getCookie("year-filter"));
+    $("#category-filter").val(getCookie("category-filter"));
+    $("#brand-filter").val(getCookie("brand-filter"));
 
     // Enable dependent filters if the previous filter has a value
-    if (getCookie("make")) {
-        loadOptions("model", getCookie("make"));
+    if (getCookie("make-filter")) {
+        loadOptions("model", getCookie("make-filter"));
         $("#model-filter").prop("disabled", false);
     }
 
-    if (getCookie("model")) {
-        loadOptions("year", getCookie("model"));
+    if (getCookie("model-filter")) {
+        loadOptions("year", getCookie("model-filter"));
         $("#year-filter").prop("disabled", false);
     }
 
-    if (getCookie("year")) {
-        loadOptions("category", getCookie("year"));
+    if (getCookie("year-filter")) {
+        loadOptions("category", getCookie("year-filter"));
         $("#category-filter").prop("disabled", false);
     }
 
-    if (getCookie("category")) {
-        loadOptions("brand", getCookie("category"));
+    if (getCookie("category-filter")) {
+        loadOptions("brand", getCookie("category-filter"));
         $("#brand-filter").prop("disabled", false);
     }
 
@@ -90,6 +103,10 @@ jQuery(document).ready(function ($) {
     // Prevent the form from submitting normally
     $("#custom-filter-form").on("submit", function (e) {
         e.preventDefault();
+
+        // Show the spinner while loading
+        $("#wvpfpff-spinner").show();
+
         var formData = $(this).serialize();
 
         // Make an AJAX request to filter products
@@ -102,6 +119,13 @@ jQuery(document).ready(function ($) {
             },
             success: function (response) {
                 $("#filter-results").html(response);
+              
+                // Hide the spinner after loading
+                $("#wvpfpff-spinner").hide();
+            },
+            complete: function () {
+                // Hide the spinner even if there was an error
+                $("#wvpfpff-spinner").hide();
             },
         });
     });

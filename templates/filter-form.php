@@ -1,6 +1,6 @@
 <?php
-/// Specify the custom taxonomy
-$taxonomy = 'product_make'; // Replace with your custom taxonomy name
+// Specify the custom taxonomy
+$taxonomy = 'product_make'; 
 
 $make_options = array();
 $direct_children = array();
@@ -12,14 +12,13 @@ if (!empty($all_terms) && !is_wp_error($all_terms)) {
     foreach ($all_terms as $term) {
         // Check if the term is a parent (has no parent)
         if ($term->parent == 0) {
+            // Add parents to the result array
+            $make_options[] = $term->name;
+            
             // Get the direct child terms for the parent
             $child_term_args = array(
                 'taxonomy' => $taxonomy,
                 'parent' => $term->term_id,
-            );
-
-            $make_options[] = array(
-                $term->name
             );
             
             $child_terms = get_terms($child_term_args);
@@ -39,12 +38,13 @@ if (!empty($all_terms) && !is_wp_error($all_terms)) {
 }
 ?>
 <form id="custom-filter-form">
+    <div id="wvpfpff-spinner"></div>
     <!-- Make Filter -->
     <select id="make-filter" name="make">
         <option value="" disabled>Make</option>
         <?php
         foreach ($make_options as $value) {
-            echo '<option value="' . esc_attr($value[0]) . '">' . esc_html($value[0]) . '</option>';
+            echo '<option value="' . esc_attr($value) . '">' . esc_html($value) . '</option>';
         }
         ?>
         <!-- Add more options as needed -->
