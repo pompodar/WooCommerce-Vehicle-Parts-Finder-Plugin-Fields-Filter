@@ -15,86 +15,91 @@ jQuery(document).ready(function ($) {
 
     // Function to load options for the dependent filters
     function loadOptions(filter, parentValue, onPageLoad) {
-        // Show the spinner while loading
-        $("#wvpfpff-spinner").show();
+        return new Promise((resolve, reject) => {
+            // Show the spinner while loading
+            $("#wvpfpff-spinner").show();
 
-        const make = $("#make-filter").val();
-        const model = $("#model-filter").val()
-            ? $("#model-filter").val()
-            : getCookie("model-filter");
-        const year = $("#year-filter").val()
-            ? $("#year-filter").val()
-            : getCookie("year-filter");
-        const category = $("#category-filter").val()
-            ? $("#category-filter").val()
-            : getCookie("category-filter");
-        const brand = $("#brand-filter").val()
-            ? $("#brand-filter").val()
-            : getCookie("brand-filter");
-        
-        console.log("temp1", model, year, category);
+            const make = $("#make-filter").val();
+            const model = $("#model-filter").val()
+                ? $("#model-filter").val()
+                : getCookie("model-filter");
+            const year = $("#year-filter").val()
+                ? $("#year-filter").val()
+                : getCookie("year-filter");
+            const category = $("#category-filter").val()
+                ? $("#category-filter").val()
+                : getCookie("category-filter");
+            const brand = $("#brand-filter").val()
+                ? $("#brand-filter").val()
+                : getCookie("brand-filter");
 
+            $.ajax({
+                url: ajaxurl,
+                type: "POST",
+                data: {
+                    action: "custom_filter_itself_ajax_handler",
+                    filter: filter,
+                    parent: parentValue,
+                    make,
+                    model,
+                    year,
+                    category,
+                    brand,
+                },
+                success: function (response) {
+                    $("#" + filter + "-filter").html(response);
+                    $("#" + filter + "-filter").prop("disabled", false);
 
-        $.ajax({
-            url: ajaxurl,
-            type: "POST",
-            data: {
-                action: "custom_filter_itself_ajax_handler",
-                filter: filter,
-                parent: parentValue,
-                make,
-                model,
-                year,
-                category,
-                brand,
-            },
-            success: function (response) {
-                $("#" + filter + "-filter").html(response);
-                $("#" + filter + "-filter").prop("disabled", false);
-console.log("temp", response);
-                if (onPageLoad) {
-                    const cookieName = filter + "-filter";
-                    $("#" + cookieName).val(getCookie(cookieName));
-                }
+                    if (onPageLoad) {
+                        const cookieName = filter + "-filter";
+                        $("#" + cookieName).val(getCookie(cookieName));
+                    }
 
-                // Hide the spinner after loading
-                $("#wvpfpff-spinner").hide();
-            },
-            complete: function () {
-                // Hide the spinner even if there was an error
-                $("#wvpfpff-spinner").hide();
-            },
+                    // Hide the spinner after loading
+                    $("#wvpfpff-spinner").hide();
+
+                    // Resolve the promise when the operation is complete
+                    resolve();
+                },
+                complete: function () {
+                    // Hide the spinner even if there was an error
+                    $("#wvpfpff-spinner").hide();
+                },
+            });
         });
     }
 
     // When the page loads, populate the "make" form fields with saved values
-    $("#make-filter").val(getCookie("make-filter"));
+    async function onPageLoadFunc() {
+        $("#make-filter").val(getCookie("make-filter"));
 
-    // Enable dependent filters if the previous filter has a value
-    if (getCookie("make-filter")) {
-        loadOptions("model", getCookie("make-filter"), 1);
-        $("#model-filter").prop("disabled", false);
+        if (getCookie("make-filter")) {
+            await $("#model-filter").prop("disabled", false);
+            await loadOptions("model", getCookie("make-filter"), 1);
+        }
+
+        if (getCookie("model-filter")) {
+            await loadOptions("year", getCookie("model-filter"), 1);
+            $("#year-filter").prop("disabled", false);
+        }
+
+        if (getCookie("year-filter")) {
+            await loadOptions("category", getCookie("year-filter"), 1);
+            $("#category-filter").prop("disabled", false);
+        }
+
+        if (getCookie("category-filter")) {
+            await loadOptions("brand", getCookie("category-filter"), 1);
+            $("#brand-filter").prop("disabled", false);
+        }
     }
 
-    if (getCookie("model-filter")) {
-        loadOptions("year", getCookie("model-filter"), 1);
-        $("#year-filter").prop("disabled", false);
-    }
+    onPageLoadFunc();
 
-    if (getCookie("year-filter")) {
-        loadOptions("category", getCookie("year-filter"), 1);
-        $("#category-filter").prop("disabled", false);
-    }
-
-    if (getCookie("category-filter")) {
-        loadOptions("brand", getCookie("category-filter"), 1);
-        $("#brand-filter").prop("disabled", false);
-    }
-
-    // When a filter changes, save the selection in a cookie
+    // When a filter changes, save the selection in a cookie and load dependent options
     $("#make-filter, #model-filter, #year-filter, #category-filter").on(
         "change",
-        function () {
+        async function () {
             const filterId = $(this).attr("id");
             const filterValue = $(this).val();
 
@@ -114,7 +119,7 @@ console.log("temp", response);
             }
 
             if (nextFilterId) {
-                loadOptions(
+                await loadOptions(
                     nextFilterId.replace("-filter", ""),
                     filterValue,
                     0

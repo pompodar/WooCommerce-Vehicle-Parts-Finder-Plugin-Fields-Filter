@@ -17,6 +17,7 @@ function custom_filter_itself_ajax_handler() {
             $parent_term_name = $selected_make; 
         } else if ($filter == 'year') {
             $parent_term_name = $selected_model; 
+            var_dump("JJJJJJJJJJJJ TEMP");
         }
             
         if ($filter == 'model' || $filter == 'year') {
