@@ -129,6 +129,15 @@ jQuery(document).ready(function ($) {
         }
     );
 
+    // When a filter changes for brand, save the selection in a cookie
+    $("#brand-filter").on("change", async function () {
+        const filterId = $(this).attr("id");
+        const filterValue = $(this).val();
+
+        // Save the selection in a cookie
+        setCookie(filterId, filterValue);
+    });
+
     // Prevent the form from submitting normally
     $("#custom-filter-form").on("submit", function (e) {
         e.preventDefault();
