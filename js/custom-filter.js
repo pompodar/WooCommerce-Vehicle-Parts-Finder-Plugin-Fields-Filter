@@ -24,7 +24,13 @@ jQuery(document).ready(function ($) {
         const model = $("#model-filter").val() ? $("#model-filter").val() : getCookie("model-filter");
         const year = $("#year-filter").val()
                     ? $("#year-filter").val()
-                    : getCookie("year-filter");
+            : getCookie("year-filter");
+        const category = $("#category-filter").val()
+            ? $("#category-filter").val()
+            : getCookie("category-filter");
+        const brand = $("#brand-filter").val()
+            ? $("#brand-filter").val()
+            : getCookie("brand-filter");
 
         $.ajax({
             url: ajaxurl,
@@ -35,12 +41,13 @@ jQuery(document).ready(function ($) {
                 parent: parentValue,
                 make,
                 model,
-                year
+                year,
+                category,
+                brand
             },
             success: function (response) {
                 $("#" + filter + "-filter").html(response);
                 $("#" + filter + "-filter").prop("disabled", false);
-                console.log(response);
                
                 if (onPageLoad) {
                     const cookieName = filter + "-filter";

@@ -11,6 +11,7 @@ function custom_filter_ajax_handler() {
             'post_type' => 'product', // Adjust to your post type if necessary
             'posts_per_page' => -1,  // Display all matching products, you can adjust this as needed
             'meta_query' => array(),
+            'hide_empty' => $hide_empty,
         );
 
         // Initialize the tax_query array
@@ -47,7 +48,7 @@ function custom_filter_ajax_handler() {
         }
 
         // Add tax query condition for "year" if it's selected
-        if (!empty($filter_data['year'] && $filter_data['year'] != 'all')) {
+        if (!empty($filter_data['category'] && $filter_data['year'] != 'all')) {
             $args['tax_query'][] = array(
                 'taxonomy' => 'product_cat',
                 'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs
@@ -55,6 +56,16 @@ function custom_filter_ajax_handler() {
                 'operator' => 'IN',
             );
         }
+
+        // Add tax query condition for a specific product tag if it's selected
+        if (!empty($filter_data['brand'] && $filter_data['brand'] != 'all')) {
+            $args = array( 
+            'post_type'      => 'product', 
+            'posts_per_page' => -1, 
+            'product_tag'    => array($filter_data['brand'])
+            );
+        }
+
 
         // Set the relation parameter to 'AND' to require both conditions to be met
         $args['tax_query']['relation'] = 'AND';

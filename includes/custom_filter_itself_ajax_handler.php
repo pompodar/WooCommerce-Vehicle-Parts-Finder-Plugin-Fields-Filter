@@ -7,7 +7,8 @@ function custom_filter_itself_ajax_handler() {
         $selected_make = isset($_POST['make']) ? sanitize_text_field($_POST['make']) : '';
         $selected_model = (isset($_POST['model']) && $_POST['model'] !== 'all') ? sanitize_text_field($_POST['model']) : '';
         $selected_year = (isset($_POST['year']) && $_POST['year'] !== 'all') ? sanitize_text_field($_POST['year']) : '';
-
+        $selected_category = (isset($_POST['category']) && $_POST['category'] !== 'all') ? sanitize_text_field($_POST['category']) : '';
+        
         // Get the filter value
         $filter = isset($_POST['filter']) ? sanitize_text_field($_POST['filter']) : '';
         
@@ -138,6 +139,15 @@ function custom_filter_itself_ajax_handler() {
                 );
             }
 
+            if (!empty($selected_category)) {
+                $tax_query[] = array(
+                    'taxonomy' => 'product_cat',
+                    'field'    => 'name',
+                    'terms'    => $selected_category,
+                    'operator' => 'IN',
+                );
+            }
+
             // Check if there are any posts associated with the selected terms
             $args = array(
                 'post_type' => 'product', // Adjust post type as needed
@@ -151,7 +161,6 @@ function custom_filter_itself_ajax_handler() {
 
             // Initialize an array to store unique category names
             $category_names = array();
-            $titles_temp = array();
 
             if ($products_query->have_posts()) {
 
@@ -159,17 +168,21 @@ function custom_filter_itself_ajax_handler() {
                 while ($products_query->have_posts()) {
                     $products_query->the_post();
 
-                    $titles_temp[] = array(
-                        'title' => get_the_title(),
-                        'product_category' => wp_get_post_terms(get_the_ID(), 'product_cat')
-                    );
-
                     // Get the categories for the current product
                     $product_categories = wp_get_post_terms(get_the_ID(), 'product_cat'); 
+                                        
+                    // Get the brand of  for the current product
+                    $product_brands = get_the_terms(get_the_ID(), 'product_tag');
 
-                    // Loop through the categories and add their names to the array
-                    foreach ($product_categories as $category) {
-                        $category_names[] = $category->name;
+                    // Loop through the categories or brands and add their names to the array 
+                    if ($filter == 'category') {
+                        foreach ($product_categories as $category) {
+                            $category_names[] = $category->name;
+                        }
+                    } else if ($filter == 'brand') {
+                        foreach ($product_brands as $brand) {
+                            $category_names[] = $brand->name;
+                        }
                     }
 
                 }
@@ -200,8 +213,7 @@ function custom_filter_itself_ajax_handler() {
                     echo '<option value="all">' . $allOptionText . '</option>';
                 }
             }
-            var_dump($titles_temp);
-            
+                        
             // Always die at the end of your AJAX function
             die();
         }
