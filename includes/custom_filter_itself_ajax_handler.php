@@ -93,11 +93,11 @@ function custom_filter_itself_ajax_handler() {
 
                 // Output the model options
                 if (!empty($options)) {
-                    echo '<option value="" disabled>' . ucfirst($filter) . '</option>';
+                    echo '<option class="wvpfpff-disabled" value="" disabled>' . ucfirst($filter) . '</option>';
                     echo '<option value="all">All ' . ucfirst($filter) . 's' . '</option>';
                     echo implode('', $options);
                 } else if ($parent_term_name == 'all') {
-                    echo '<option value="" disabled>' . ucfirst($filter) . '</option>';
+                    echo '<option class="wvpfpff-disabled" value="" disabled>' . ucfirst($filter) . '</option>';
                     echo '<option value="all">All ' . ucfirst($filter) . 's' . '</option>';
                 }
             }
@@ -197,7 +197,7 @@ function custom_filter_itself_ajax_handler() {
 
                 // Output the model options (including categories)
                 if (!empty($options)) {
-                    echo '<option value="" disabled>' . ucfirst($filter) . '</option>';
+                    echo '<option class="wvpfpff-disabled" value="" disabled>' . ucfirst($filter) . '</option>';
                     
                     // Modify the "All" option text when the filter is "category"
                     $allOptionText = ($filter === 'category') ? 'All ' . str_replace('y' , '' , ucfirst($filter)) . 'ies' : 'All ' . ucfirst($filter) . 's';
@@ -205,7 +205,7 @@ function custom_filter_itself_ajax_handler() {
                     echo '<option value="all">' . $allOptionText . '</option>';
                     echo implode('', $options);
                 } else if ($parent_term_name == 'all') {
-                    echo '<option value="" disabled>' . ucfirst($filter) . '</option>';
+                    echo '<option class="wvpfpff-disabled" value="" disabled>' . ucfirst($filter) . '</option>';
                     
                     // Modify the "All" option text when the filter is "category"
                     $allOptionText = ($filter === 'category') ? 'All ' . str_replace('y' , '' , ucfirst($filter)) . 'ies' : 'All ' . ucfirst($filter) . 's';
