@@ -83,6 +83,9 @@ function custom_filter_itself_ajax_handler() {
 
                     $child_terms = get_terms($child_term_args);
 
+                    // Initialize the options array
+                    $options = array();
+
                     if (!empty($child_terms) && !is_wp_error($child_terms)) {
                         foreach ($child_terms as $child_term) {
                             // Display child term information
@@ -99,6 +102,8 @@ function custom_filter_itself_ajax_handler() {
                 } else if ($parent_term_name == 'all') {
                     echo '<option class="wvpfpff-disabled" value="" disabled>' . ucfirst($filter) . '</option>';
                     echo '<option value="all">All ' . ucfirst($filter) . 's' . '</option>';
+                } else {
+                    echo '<option class="wvpfpff-disabled" value="no" disabled>' . 'No ' . ucfirst($filter) . 's' . '</option>';
                 }
             }
 
@@ -190,27 +195,27 @@ function custom_filter_itself_ajax_handler() {
                 // Remove duplicates from the category names array
                 $unique_category_names = array_unique($category_names);
 
+                // Initialize an options array
+                $options = array();
+
                 // Loop through the unique category names and add them to the options array
                 foreach ($unique_category_names as $category_name) {
                     $options[] = '<option value="' . esc_attr($category_name) . '">' . esc_html($category_name) . '</option>';
                 }
 
+                // Modify the "All" option text when the filter is "category"
+                $allOptionText = ($filter === 'category') ? 'All ' . str_replace('y' , '' , ucfirst($filter)) . 'ies' : 'All ' . ucfirst($filter) . 's';
+
                 // Output the model options (including categories)
                 if (!empty($options)) {
                     echo '<option class="wvpfpff-disabled" value="" disabled>' . ucfirst($filter) . '</option>';
-                    
-                    // Modify the "All" option text when the filter is "category"
-                    $allOptionText = ($filter === 'category') ? 'All ' . str_replace('y' , '' , ucfirst($filter)) . 'ies' : 'All ' . ucfirst($filter) . 's';
-
                     echo '<option value="all">' . $allOptionText . '</option>';
                     echo implode('', $options);
                 } else if ($parent_term_name == 'all') {
                     echo '<option class="wvpfpff-disabled" value="" disabled>' . ucfirst($filter) . '</option>';
-                    
-                    // Modify the "All" option text when the filter is "category"
-                    $allOptionText = ($filter === 'category') ? 'All ' . str_replace('y' , '' , ucfirst($filter)) . 'ies' : 'All ' . ucfirst($filter) . 's';
-
                     echo '<option value="all">' . $allOptionText . '</option>';
+                } else {
+                    echo '<option value="no">' . 'No ' .  str_replace('All', '', $allOptionText) . '</option>';
                 }
             }
                         
@@ -222,4 +227,5 @@ function custom_filter_itself_ajax_handler() {
 
 // Hook the AJAX handler into WordPress
 add_action('wp_ajax_custom_filter_itself_ajax_handler', 'custom_filter_itself_ajax_handler');
-add_action('wp_ajax_nopriv_custom_filter_itself_ajax_handler', 'custom_itself_filter_ajax_handler');
+add_action('wp_ajax_nopriv_custom_filter_itself_ajax_handler', 'custom_filter_itself_ajax_handler');
+?>

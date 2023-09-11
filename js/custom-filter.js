@@ -19,11 +19,11 @@ jQuery(document).ready(function ($) {
         $("#wvpfpff-spinner").show();
 
         const make = $("#make-filter").val();
-        
-        // TODO not 100% sure if correct
-        const model = $("#model-filter").val() ? $("#model-filter").val() : getCookie("model-filter");
+        const model = $("#model-filter").val()
+            ? $("#model-filter").val()
+            : getCookie("model-filter");
         const year = $("#year-filter").val()
-                    ? $("#year-filter").val()
+            ? $("#year-filter").val()
             : getCookie("year-filter");
         const category = $("#category-filter").val()
             ? $("#category-filter").val()
@@ -31,6 +31,9 @@ jQuery(document).ready(function ($) {
         const brand = $("#brand-filter").val()
             ? $("#brand-filter").val()
             : getCookie("brand-filter");
+        
+        console.log("temp1", model, year, category);
+
 
         $.ajax({
             url: ajaxurl,
@@ -43,15 +46,15 @@ jQuery(document).ready(function ($) {
                 model,
                 year,
                 category,
-                brand
+                brand,
             },
             success: function (response) {
                 $("#" + filter + "-filter").html(response);
                 $("#" + filter + "-filter").prop("disabled", false);
-               
+console.log("temp", response);
                 if (onPageLoad) {
                     const cookieName = filter + "-filter";
-                    // $("#" + cookieName).val(getCookie(cookieName));
+                    $("#" + cookieName).val(getCookie(cookieName));
                 }
 
                 // Hide the spinner after loading
@@ -65,27 +68,26 @@ jQuery(document).ready(function ($) {
     }
 
     // When the page loads, populate the "make" form fields with saved values
-    // $("#make-filter").val(getCookie("make-filter"));
-
+    $("#make-filter").val(getCookie("make-filter"));
 
     // Enable dependent filters if the previous filter has a value
     if (getCookie("make-filter")) {
-        // loadOptions("model", getCookie("make-filter"), 1);
+        loadOptions("model", getCookie("make-filter"), 1);
         $("#model-filter").prop("disabled", false);
     }
 
     if (getCookie("model-filter")) {
-        // loadOptions("year", getCookie("model-filter"), 1);
+        loadOptions("year", getCookie("model-filter"), 1);
         $("#year-filter").prop("disabled", false);
     }
 
     if (getCookie("year-filter")) {
-        // loadOptions("category", getCookie("year-filter"), 1);
+        loadOptions("category", getCookie("year-filter"), 1);
         $("#category-filter").prop("disabled", false);
     }
 
     if (getCookie("category-filter")) {
-        // loadOptions("brand", getCookie("category-filter"), 1);
+        loadOptions("brand", getCookie("category-filter"), 1);
         $("#brand-filter").prop("disabled", false);
     }
 
@@ -97,7 +99,7 @@ jQuery(document).ready(function ($) {
             const filterValue = $(this).val();
 
             // Save the selection in a cookie
-            //setCookie(filterId, filterValue);
+            setCookie(filterId, filterValue);
 
             // Enable and load options for the next filter
             let nextFilterId = "";
@@ -112,7 +114,11 @@ jQuery(document).ready(function ($) {
             }
 
             if (nextFilterId) {
-                loadOptions(nextFilterId.replace("-filter", ""), filterValue, 0);
+                loadOptions(
+                    nextFilterId.replace("-filter", ""),
+                    filterValue,
+                    0
+                );
                 $("#" + nextFilterId).prop("disabled", false);
             }
         }
@@ -137,7 +143,7 @@ jQuery(document).ready(function ($) {
             },
             success: function (response) {
                 $("#filter-results").html(response);
-              
+
                 // Hide the spinner after loading
                 $("#wvpfpff-spinner").hide();
             },
