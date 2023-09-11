@@ -1,3 +1,7 @@
+#custom-filter-form {
+    position: relative;
+}
+
 #wvpfpff-spinner {
     display: none;
     border: 4px solid rgba(255, 255, 255, 0.3);

@@ -27,7 +27,7 @@ function custom_filter_ajax_handler() {
         }
 
         // Add tax query condition for "model" if it's selected
-        if (!empty($filter_data['model'] && $filter_data['make'] != 'all')) {
+        if (!empty($filter_data['model'] && $filter_data['model'] != 'all')) {
             $args['tax_query'][] = array(
                 'taxonomy' => 'product_make',
                 'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs
@@ -36,11 +36,28 @@ function custom_filter_ajax_handler() {
             );
         }
 
+        // Add tax query condition for "year" if it's selected
+        if (!empty($filter_data['year'] && $filter_data['year'] != 'all')) {
+            $args['tax_query'][] = array(
+                'taxonomy' => 'product_make',
+                'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs
+                'terms' => sanitize_text_field($filter_data['year']),
+                'operator' => 'IN',
+            );
+        }
+
+        // Add tax query condition for "year" if it's selected
+        if (!empty($filter_data['year'] && $filter_data['year'] != 'all')) {
+            $args['tax_query'][] = array(
+                'taxonomy' => 'product_cat',
+                'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs
+                'terms' => sanitize_text_field($filter_data['category']),
+                'operator' => 'IN',
+            );
+        }
+
         // Set the relation parameter to 'AND' to require both conditions to be met
         $args['tax_query']['relation'] = 'AND';
-
-
-        // Add similar meta query conditions for other filters (model, year, category, brand)
 
         // Run the WP_Query
         $products_query = new WP_Query($args);
@@ -49,14 +66,14 @@ function custom_filter_ajax_handler() {
         if ($products_query->have_posts()) {
             while ($products_query->have_posts()) {
                 $products_query->the_post();
-                
+
                 // Display the product information here
                 $product_id = get_the_ID();
                 $product_title = get_the_title();
                 $product_price = get_post_meta($product_id, '_price', true);
                 $product_link = get_permalink();
-                
-                if (!empty($product_price))  {    
+
+                if (!empty($product_price))  {
                     echo '<div class="product">';
                     echo '<h2><a href="' . esc_url($product_link) . '">' . esc_html($product_title) . '</a></h2>';
                     echo '<p>Price: ' . wc_price($product_price) . '</p>';

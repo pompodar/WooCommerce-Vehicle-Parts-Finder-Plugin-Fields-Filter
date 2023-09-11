@@ -1,6 +1,6 @@
 jQuery(document).ready(function ($) {
     // Access the AJAX URL from the localized variable
-    var ajaxurl = custom_filter_vars.ajaxurl;
+    const ajaxurl = custom_filter_vars.ajaxurl;
 
     // Function to set a cookie with the selected values
     function setCookie(name, value) {
@@ -9,12 +9,12 @@ jQuery(document).ready(function ($) {
 
     // Function to get a cookie value
     function getCookie(name) {
-        var match = document.cookie.match(new RegExp(name + "=([^;]+)"));
+        const match = document.cookie.match(new RegExp(name + "=([^;]+)"));
         return match ? match[1] : null;
     }
 
     // Function to load options for the dependent filters
-    function loadOptions(filter, parentValue) {
+    function loadOptions(filter, parentValue, onPageLoad) {
         // Show the spinner while loading
         $("#wvpfpff-spinner").show();
 
@@ -22,6 +22,9 @@ jQuery(document).ready(function ($) {
         
         // TODO not 100% sure if correct
         const model = $("#model-filter").val() ? $("#model-filter").val() : getCookie("model-filter");
+        const year = $("#year-filter").val()
+                    ? $("#year-filter").val()
+                    : getCookie("year-filter");
 
         $.ajax({
             url: ajaxurl,
@@ -31,19 +34,18 @@ jQuery(document).ready(function ($) {
                 filter: filter,
                 parent: parentValue,
                 make,
-                model
+                model,
+                year
             },
             success: function (response) {
                 $("#" + filter + "-filter").html(response);
                 $("#" + filter + "-filter").prop("disabled", false);
-
-                // TODO not 100% sure if correct
-                // When the page loads, populate the form fields with saved values
-                $("#make-filter").val(getCookie("make-filter"));
-                $("#model-filter").val(getCookie("model-filter"));
-                $("#year-filter").val(getCookie("year-filter"));
-                $("#category-filter").val(getCookie("category-filter"));
-                $("#brand-filter").val(getCookie("brand-filter"));
+                console.log(response);
+               
+                if (onPageLoad) {
+                    const cookieName = filter + "-filter";
+                    // $("#" + cookieName).val(getCookie(cookieName));
+                }
 
                 // Hide the spinner after loading
                 $("#wvpfpff-spinner").hide();
@@ -55,31 +57,28 @@ jQuery(document).ready(function ($) {
         });
     }
 
-    // When the page loads, populate the form fields with saved values
-    $("#make-filter").val(getCookie("make-filter"));
-    $("#model-filter").val(getCookie("model-filter"));
-    $("#year-filter").val(getCookie("year-filter"));
-    $("#category-filter").val(getCookie("category-filter"));
-    $("#brand-filter").val(getCookie("brand-filter"));
+    // When the page loads, populate the "make" form fields with saved values
+    // $("#make-filter").val(getCookie("make-filter"));
+
 
     // Enable dependent filters if the previous filter has a value
     if (getCookie("make-filter")) {
-        loadOptions("model", getCookie("make-filter"));
+        // loadOptions("model", getCookie("make-filter"), 1);
         $("#model-filter").prop("disabled", false);
     }
 
     if (getCookie("model-filter")) {
-        loadOptions("year", getCookie("model-filter"));
+        // loadOptions("year", getCookie("model-filter"), 1);
         $("#year-filter").prop("disabled", false);
     }
 
     if (getCookie("year-filter")) {
-        loadOptions("category", getCookie("year-filter"));
+        // loadOptions("category", getCookie("year-filter"), 1);
         $("#category-filter").prop("disabled", false);
     }
 
     if (getCookie("category-filter")) {
-        loadOptions("brand", getCookie("category-filter"));
+        // loadOptions("brand", getCookie("category-filter"), 1);
         $("#brand-filter").prop("disabled", false);
     }
 
@@ -87,14 +86,14 @@ jQuery(document).ready(function ($) {
     $("#make-filter, #model-filter, #year-filter, #category-filter").on(
         "change",
         function () {
-            var filterId = $(this).attr("id");
-            var filterValue = $(this).val();
+            const filterId = $(this).attr("id");
+            const filterValue = $(this).val();
 
             // Save the selection in a cookie
-            setCookie(filterId, filterValue);
+            //setCookie(filterId, filterValue);
 
             // Enable and load options for the next filter
-            var nextFilterId = "";
+            let nextFilterId = "";
             if (filterId === "make-filter") {
                 nextFilterId = "model-filter";
             } else if (filterId === "model-filter") {
@@ -106,7 +105,7 @@ jQuery(document).ready(function ($) {
             }
 
             if (nextFilterId) {
-                loadOptions(nextFilterId.replace("-filter", ""), filterValue);
+                loadOptions(nextFilterId.replace("-filter", ""), filterValue, 0);
                 $("#" + nextFilterId).prop("disabled", false);
             }
         }
@@ -119,7 +118,7 @@ jQuery(document).ready(function ($) {
         // Show the spinner while loading
         $("#wvpfpff-spinner").show();
 
-        var formData = $(this).serialize();
+        const formData = $(this).serialize();
 
         // Make an AJAX request to filter products
         $.ajax({

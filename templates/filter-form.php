@@ -1,4 +1,4 @@
-<?php
+<?php           
 // Specify the custom taxonomy
 $taxonomy = 'product_make';
 
@@ -14,45 +14,7 @@ if (!empty($all_terms) && !is_wp_error($all_terms)) {
         // Check if the term is a parent (has no parent)
         if ($term->parent == 0) {
             // Add parents to the result array
-            $make_options[] = $term->name;
-
-            // Get the direct child terms for the parent
-            $child_term_args = array(
-                'taxonomy' => $taxonomy,
-                'parent' => $term->term_id,
-            );
-
-            $child_terms = get_terms($child_term_args);
-
-            $parent_children_names = array();
-            foreach ($child_terms as $child_term) {
-                $parent_children_names[] = $child_term->name;
-
-                // Get the direct grandchildren terms for the child
-                $grandchild_term_args = array(
-                    'taxonomy' => $taxonomy,
-                    'parent' => $child_term->term_id,
-                );
-
-                $grandchild_terms = get_terms($grandchild_term_args);
-
-                $child_grandchildren_names = array();
-                foreach ($grandchild_terms as $grandchild_term) {
-                    $child_grandchildren_names[] = $grandchild_term->name;
-                }
-
-                // Add direct grandchildren to the result array
-                $grandchildren[] = array(
-                    'child_name' => $child_term->name,
-                    'grandchildren_names' => $child_grandchildren_names,
-                );
-            }
-
-            // Add direct children to the result array
-            $direct_children[] = array(
-                'parent_name' => $term->name,
-                'children_names' => $parent_children_names,
-            );
+            $make_options[] = $term->name;            
         }
     }
 }
