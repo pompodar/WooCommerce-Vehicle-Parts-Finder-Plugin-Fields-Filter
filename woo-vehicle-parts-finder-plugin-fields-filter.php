@@ -39,6 +39,15 @@ function custom_filter_shortcode() {
 }
 add_shortcode('Woo_Vehicle_Parts_Finder_Plugin_Fields_Filter', 'custom_filter_shortcode');// Include the HTML structure for the filter form, passing the attributes
     
+function wvpfpff_plugin_admin_page() {
+    add_menu_page('Filter Custom Orders', 'Customise Filters Order', 'manage_options', 'wvpfpff-plugin-rearrange', 'wvpfpff_plugin_render_admin_page');
+}
+add_action('admin_menu', 'wvpfpff_plugin_admin_page');
+    
 // Include main filter functionality files
 include(plugin_dir_path(__FILE__) . 'includes/custom_filter_ajax_handler.php');
 include(plugin_dir_path(__FILE__) . 'includes/custom_filter_itself_ajax_handler.php');
+
+// Include admin page files
+include(plugin_dir_path(__FILE__) . 'includes/admin_page/admin_page.php');
+include(plugin_dir_path(__FILE__) . 'includes/admin_page/update_item_order.php');

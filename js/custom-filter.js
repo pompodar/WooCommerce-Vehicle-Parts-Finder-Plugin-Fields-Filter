@@ -167,4 +167,34 @@ jQuery(document).ready(function ($) {
             },
         });
     });
+
+    // Function to clear a cookie by name
+    function clearCookie(name) {
+        document.cookie =
+            name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    }
+
+    // Handle the click event for the reset button
+    $("#reset-filters").on("click", function () {
+        // Clear the selected filter values
+        $(
+            "#make-filter, #model-filter, #year-filter, #category-filter, #brand-filter"
+        ).val("");
+
+        // Clear the corresponding cookies
+        clearCookie("make-filter");
+        clearCookie("model-filter");
+        clearCookie("year-filter");
+        clearCookie("category-filter");
+        clearCookie("brand-filter");
+
+        // Disable dependent filters and clear their options
+        $("#model-filter, #year-filter, #category-filter, #brand-filter")
+            .prop("disabled", true)
+            .empty()
+            .append('<option value="">Select</option>');
+
+        // Trigger the form submission to reset the product list (if needed)
+        $("#custom-filter-form").submit();
+    });
 });

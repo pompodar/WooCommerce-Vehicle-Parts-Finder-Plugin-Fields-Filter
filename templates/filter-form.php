@@ -64,6 +64,7 @@ if (!empty($all_terms) && !is_wp_error($all_terms)) {
     </select>
 
     <input type="submit" value="Search">
+    <button id="reset-filters">Reset</button>
 </form>
 
 <div id="filter-results">
