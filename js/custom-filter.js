@@ -33,6 +33,8 @@ jQuery(document).ready(function ($) {
                 ? $("#brand-filter").val()
                 : getCookie("brand-filter");
 
+            const modelOrderBy = $("#model-filter").data().modelOrderBy;
+            
             $.ajax({
                 url: ajaxurl,
                 type: "POST",
@@ -45,6 +47,7 @@ jQuery(document).ready(function ($) {
                     year,
                     category,
                     brand,
+                    model_order_by: modelOrderBy,
                 },
                 success: function (response) {
                     $("#" + filter + "-filter").html(response);
@@ -57,7 +60,7 @@ jQuery(document).ready(function ($) {
 
                     // Hide the spinner after loading
                     $("#wvpfpff-spinner").hide();
-
+                    console.log(response);
                     // Resolve the promise when the operation is complete
                     resolve();
                 },

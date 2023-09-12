@@ -24,11 +24,11 @@ function custom_filter_enqueue_scripts() {
 add_action('wp_enqueue_scripts', 'custom_filter_enqueue_scripts');
 
 // Define the shortcode
-function custom_filter_shortcode() {
-    $atts = shortcode_atts(array(
-        'model_order_by' => 'default', // Default sorting option for model
-        'brand_order_by' => 'default', // Default sorting option for brand
-    ), $atts);
+function custom_filter_shortcode($atts) {
+    extract(shortcode_atts(array(
+      'model_order_by' => 'default', // Default sorting option for model
+      'brand_order_by' => 'default', // Default sorting option for brand
+   ), $atts));
 
     ob_start(); // Start output buffering
 

@@ -1,4 +1,4 @@
-<?php           
+<?php              
 // Specify the custom taxonomy
 $taxonomy = 'product_make';
 
@@ -34,7 +34,7 @@ if (!empty($all_terms) && !is_wp_error($all_terms)) {
     </select>
 
     <!-- Model Filter (Initially Disabled) -->
-    <select id="model-filter" name="model" disabled>
+    <select data-model-order-by="<?php echo $model_order_by; ?>" id="model-filter" name="model" disabled>
         <option value="" disabled>Model</option>
         <option value="all">All Models</option>
         <!-- Options for models will be loaded dynamically using JavaScript -->

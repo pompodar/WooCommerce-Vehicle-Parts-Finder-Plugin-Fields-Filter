@@ -219,7 +219,7 @@ function custom_filter_itself_ajax_handler() {
                     echo '<option value="no">' . 'No ' .  str_replace('All', '', $allOptionText) . '</option>';
                 }
             }
-                        
+            
             // Always die at the end of your AJAX function
             die();
         }
