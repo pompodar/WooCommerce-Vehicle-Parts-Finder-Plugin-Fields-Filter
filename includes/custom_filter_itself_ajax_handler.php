@@ -9,6 +9,8 @@ function custom_filter_itself_ajax_handler() {
         $selected_year = (isset($_POST['year']) && $_POST['year'] !== 'all') ? sanitize_text_field($_POST['year']) : '';
         $selected_category = (isset($_POST['category']) && $_POST['category'] !== 'all') ? sanitize_text_field($_POST['category']) : '';
         
+        $model_order_by = (isset($_POST['model_order_by'])) ? sanitize_text_field($_POST['model_order_by']) : '';
+
         // Get the filter value
         $filter = isset($_POST['filter']) ? sanitize_text_field($_POST['filter']) : '';
         
@@ -17,7 +19,6 @@ function custom_filter_itself_ajax_handler() {
             $parent_term_name = $selected_make; 
         } else if ($filter == 'year') {
             $parent_term_name = $selected_model; 
-            var_dump("JJJJJJJJJJJJ TEMP");
         }
             
         if ($filter == 'model' || $filter == 'year') {
@@ -87,13 +88,26 @@ function custom_filter_itself_ajax_handler() {
                     // Initialize the options array
                     $options = array();
 
-                    if (!empty($child_terms) && !is_wp_error($child_terms)) {
-                        foreach ($child_terms as $child_term) {
+                    // Check Model Order By value
+                    if ($model_order_by == 'custom' && $filter == 'model') {
+                        $option_name = 'wvpfpff_plugin_' . $parent_term->name . 'models_item_order';
+                        
+                        $options_array = get_option($option_name, array());
+                        
+                        foreach ($options_array as $option) {
                             // Display child term information
-                            $options[] = '<option value="' . esc_attr($child_term->name) . '">' . esc_html($child_term->name) . '</option>';
+                            $options[] = '<option value="' . esc_attr($option) . '">' . esc_html($option) . '</option>';
+                        }
+                    } else {
+                        if (!empty($child_terms) && !is_wp_error($child_terms)) {
+                            foreach ($child_terms as $child_term) {
+                                // Display child term information
+                                $options[] = '<option value="' . esc_attr($child_term->name) . '">' . esc_html($child_term->name) . '</option>';
+                            }
                         }
                     }
                 }
+                
 
                 // Output the model options
                 if (!empty($options)) {
