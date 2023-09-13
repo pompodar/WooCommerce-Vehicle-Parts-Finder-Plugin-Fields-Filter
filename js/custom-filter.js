@@ -16,8 +16,9 @@ jQuery(document).ready(function ($) {
     // Function to load options for the dependent filters
     function loadOptions(filter, parentValue, onPageLoad) {
         return new Promise((resolve, reject) => {
-            // Show the spinner while loading
+            // Show the spinner while loading and make the form unclikable
             $("#wvpfpff-spinner").show();
+            $("#custom-filter-form").addClass("wvpfpff-unclickable");
 
             const make = $("#make-filter").val();
             const model = $("#model-filter").val()
@@ -64,15 +65,20 @@ jQuery(document).ready(function ($) {
                         $("#" + cookieName).val(getCookie(cookieName));
                     }
 
-                    // Hide the spinner after loading
+                    // Hide the spinner after loading and make the form clickable
                     $("#wvpfpff-spinner").hide();
-                    
+                    $("#custom-filter-form").removeClass(
+                        "wvpfpff-unclickable"
+                    );
+
                     // Resolve the promise when the operation is complete
                     resolve();
                 },
                 complete: function () {
-                    // Hide the spinner even if there was an error
-                    $("#wvpfpff-spinner").hide();
+                    // Hide the spinner even if there was an error and make the form clickable
+                    $("#wvpfpff-spinner").hide();$("#custom-filter-form").removeClass(
+                        "wvpfpff-unclickable"
+                    );
                 },
             });
         });

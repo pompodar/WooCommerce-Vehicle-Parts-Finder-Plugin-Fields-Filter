@@ -41,10 +41,21 @@
 .wvpfpff-disabled {
     pointer-events: none;
 }
+.wvpfpff-unclickable {
+    pointer-events: none;
+    cursor: default;
+}
+
+.wvpfpff-clickable {
+    pointer-events: all;
+    cursor: pointer;
+}
 
 #custom-filter-form > input, #custom-filter-form > button {
     padding: 0;
 }
+
+
 
 @media only screen and (max-width: 768px) {
     #custom-filter-form {
