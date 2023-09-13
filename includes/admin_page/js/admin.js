@@ -101,3 +101,52 @@ jQuery(document).ready(function ($) {
         },
     });
 });
+
+// Tags
+jQuery(document).ready(function ($) {
+    // Toggle the form for each parent term and its children
+    $(".toggle-form-tags").on("click", function () {
+        const form = $(".sortable-form-tags");
+        form.slideToggle();
+
+        form.prev().text() == "Show Tags"
+            ? form.prev().text("Hide Tags")
+            : form.prev().text("Show Tags");
+    });
+
+    // Handle the sortable list
+    const sortableList = $("#sortable-list-tags");
+    sortableList.sortable({
+        update: function () {
+            // Update the order when items are rearranged
+            const order = [];
+            $(".wvpfppff-admin-spinner-tags").show();
+
+            sortableList.find(".sortable-item").each(function () {
+                order.push($(this).text());
+            });
+
+            // Send the updated order via AJAX
+            $.ajax({
+                url: wvpfpff_filter_vars.ajaxurl,
+                type: "POST",
+                data: {
+                    action: "wvpfpff_plugin_update_tag_item_order",
+                    new_order: order,
+                },
+                success: function (response) {
+                    if (response.success) {
+                        // Display the success message to the user
+                        alert(response.data); // Show a pop-up message
+                        // You can also display the message in a div on the page if needed
+                    } else {
+                        // Display the error message to the user
+                        alert(response.data); // Show a pop-up message
+                        // You can also display the message in a div on the page if needed
+                    }
+                    $(".wvpfppff-admin-spinner-tags").hide();
+                },
+            });
+        },
+    });
+});

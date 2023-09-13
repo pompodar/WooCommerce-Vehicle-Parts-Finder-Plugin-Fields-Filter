@@ -27,6 +27,7 @@ add_action('wp_enqueue_scripts', 'custom_filter_enqueue_scripts');
 function custom_filter_shortcode($atts) {
     extract(shortcode_atts(array(
       'model_order_by' => 'default', // Default sorting option for model
+      'category_order_by' => 'default', // Default sorting option for category
       'brand_order_by' => 'default', // Default sorting option for brand
    ), $atts));
 

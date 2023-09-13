@@ -49,7 +49,7 @@ if (!empty($all_terms) && !is_wp_error($all_terms)) {
     </select>
 
     <!-- Category Filter (Initially Disabled) -->
-    <select id="category-filter" name="category" disabled>
+    <select data-category-order-by="<?php echo $category_order_by; ?>" id="category-filter" name="category" disabled>
         <option value="" disabled>Category</option>
         <option value="all">All Categories</option>
 
@@ -57,7 +57,7 @@ if (!empty($all_terms) && !is_wp_error($all_terms)) {
     </select>
 
     <!-- Brand Filter (Initially Disabled) -->
-    <select id="brand-filter" name="brand" disabled>
+    <select data-tag-order-by="<?php echo $brand_order_by; ?>" id="brand-filter" name="brand" disabled>
         <option value="" disabled>Brand</option>
         <option value="all">All Brands</option>
         <!-- Options for brands will be loaded dynamically using JavaScript -->

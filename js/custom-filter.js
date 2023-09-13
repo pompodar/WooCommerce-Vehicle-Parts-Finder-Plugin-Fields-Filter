@@ -34,7 +34,11 @@ jQuery(document).ready(function ($) {
                 : getCookie("brand-filter");
 
             const modelOrderBy = $("#model-filter").data().modelOrderBy;
-            
+            const categoryOrderBy =
+                $("#category-filter").data().categoryOrderBy;
+            const brandOrderBy =
+                $("#brand-filter").data().tagOrderBy;
+
             $.ajax({
                 url: ajaxurl,
                 type: "POST",
@@ -48,6 +52,8 @@ jQuery(document).ready(function ($) {
                     category,
                     brand,
                     model_order_by: modelOrderBy,
+                    category_order_by: categoryOrderBy,
+                    brand_order_by: brandOrderBy,
                 },
                 success: function (response) {
                     $("#" + filter + "-filter").html(response);
@@ -60,7 +66,7 @@ jQuery(document).ready(function ($) {
 
                     // Hide the spinner after loading
                     $("#wvpfpff-spinner").hide();
-                    console.log(response);
+                    
                     // Resolve the promise when the operation is complete
                     resolve();
                 },

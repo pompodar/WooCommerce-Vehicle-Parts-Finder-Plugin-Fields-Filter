@@ -10,6 +10,8 @@ function custom_filter_itself_ajax_handler() {
         $selected_category = (isset($_POST['category']) && $_POST['category'] !== 'all') ? sanitize_text_field($_POST['category']) : '';
         
         $model_order_by = (isset($_POST['model_order_by'])) ? sanitize_text_field($_POST['model_order_by']) : '';
+        $category_order_by = (isset($_POST['category_order_by'])) ? sanitize_text_field($_POST['category_order_by']) : '';
+        $brand_order_by = (isset($_POST['brand_order_by'])) ? sanitize_text_field($_POST['brand_order_by']) : '';
 
         // Get the filter value
         $filter = isset($_POST['filter']) ? sanitize_text_field($_POST['filter']) : '';
@@ -212,13 +214,48 @@ function custom_filter_itself_ajax_handler() {
 
                 // Initialize an options array
                 $options = array();
+                    
+                // Check Category Order By and Brand Order by values
+                if ($category_order_by == 'custom' && $filter == 'category') {
+                    $custom_ordered_cats = get_option('wvpfpff_plugin_category_item_order', array());
+                    
+                    // Define a a sorted array
+                    $sorted_options = array();
 
-                // Loop through the unique category names and add them to the options array
-                foreach ($unique_category_names as $category_name) {
-                    $options[] = '<option value="' . esc_attr($category_name) . '">' . esc_html($category_name) . '</option>';
+                    // Sort the array by custom order
+                    for($i = 0; $i < count($custom_ordered_cats); $i++) {   
+                        if(in_array($custom_ordered_cats[$i], $unique_category_names)) {
+                            $sorted_options[] = $custom_ordered_cats[$i];
+                        }
+                    }    
+                    
+                    // Loop through the unique category names and add them to the options array
+                    foreach ($sorted_options as $category_name) {
+                        $options[] = '<option value="' . esc_attr($category_name) . '">' . esc_html($category_name) . '</option>';
+                    }
+                } else if ($brand_order_by == 'custom' && $filter == 'brand') {
+                    $custom_ordered_brands = get_option('wvpfpff_plugin_tag_item_order', array());
+                    
+                    $sorted_options = array();
+
+                    // Sort the array by custom order
+                    for($i = 0; $i < count($custom_ordered_brands); $i++) {   
+                        if(in_array($custom_ordered_brands[$i], $unique_category_names)) {
+                            $sorted_options[] = $custom_ordered_brands[$i];
+                        }
+                    } 
+var_dump($custom_ordered_brands);
+                    // Loop through the unique tags names and add them to the options array
+                    foreach ($sorted_options as $tag_name) {
+                        $options[] = '<option value="' . esc_attr($tag_name) . '">' . esc_html($tag_name) . '</option>';
+                    }
+                } else {
+                    // Loop through the unique category names and add them to the options array
+                    foreach ($unique_category_names as $category_name) {
+                        $options[] = '<option value="' . esc_attr($category_name) . '">' . esc_html($category_name) . '</option>';
+                    }   
                 }
-
-                // Modify the "All" option text when the filter is "category"
+                                // Modify the "All" option text when the filter is "category"
                 $allOptionText = ($filter === 'category') ? 'All ' . str_replace('y' , '' , ucfirst($filter)) . 'ies' : 'All ' . ucfirst($filter) . 's';
 
                 // Output the model options (including categories)
@@ -233,7 +270,7 @@ function custom_filter_itself_ajax_handler() {
                     echo '<option value="no">' . 'No ' .  str_replace('All', '', $allOptionText) . '</option>';
                 }
             }
-            
+            var_dump($brand_order_by);
             // Always die at the end of your AJAX function
             die();
         }
