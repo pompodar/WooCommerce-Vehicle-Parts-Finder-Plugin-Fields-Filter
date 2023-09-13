@@ -42,7 +42,7 @@
     pointer-events: none;
 }
 
-#wvpfpff-submit, #wvpfpff-reset-filters {
+#custom-filter-form > input, #custom-filter-form > button {
     padding: 0;
 }
 
