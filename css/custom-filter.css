@@ -1,5 +1,16 @@
 #custom-filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: "center";
+    align-items: "center";
+    gap: 10px;
     position: relative;
+}
+
+#custom-filter-form > * {
+    width: 25%;
+    height: 28px;
+    cursor: pointer;
 }
 
 #wvpfpff-spinner {
@@ -29,4 +40,23 @@
 
 .wvpfpff-disabled {
     pointer-events: none;
+}
+
+#wvpfpff-submit, #wvpfpff-reset-filters {
+    padding: 0;
+}
+
+@media only screen and (max-width: 768px) {
+    #custom-filter-form {
+        flex-direction: column;
+    }
+
+    #custom-filter-form > * {
+        width: 100%;
+    }
+
+    #wvpfpff-spinner {
+        width: 24px;
+        height: 24px;
+    }
 }
