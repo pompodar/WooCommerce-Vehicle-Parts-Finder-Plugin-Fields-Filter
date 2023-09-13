@@ -28,7 +28,7 @@ function wvpfpff_plugin_render_admin_page() {
 
     if (!empty($parent_terms) && !is_wp_error($parent_terms)) {
         foreach ($parent_terms as $parent_term) {
-            $parent_term_name = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '_', $parent_term->name));
+            $parent_term_name = preg_replace('/[^a-zA-Z0-9]+/', ' ', str_replace('andamp', 'and', str_replace('&', 'and', $parent_term->name)));;
             $parent_term_names[] = $parent_term_name;
         }
     }
@@ -55,7 +55,7 @@ function wvpfpff_plugin_render_admin_page() {
     echo '<form style="display: none" method="post" id="sortable-form" style="display:none;">'; // Initially hide the form
     
     // Display notifications
-    if ($added_items != $removed_items) {
+    if (!(count( $added_items ) == count( $removed_items ) && !array_diff( $added_items, $removed_items ))) {
         if (!empty($added_items)) {
             echo '<div class="update bad-news">';
             echo '<p>Added items for makes: ' . implode(', ', $added_items) . '</p>';
@@ -128,8 +128,8 @@ function wvpfpff_plugin_render_admin_page() {
             
             if (!empty($children) && !is_wp_error($children)) {
                 foreach ($children as $child_term) {
-                    $children_name = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '_', $child_term->name));
-                    $child_term_names[] = $category_name;
+                    $children_name = preg_replace('/[^a-zA-Z0-9]+/', ' ', str_replace('andamp', 'and', str_replace('&', 'and', $child_term->name)));
+                    $child_term_names[] = $children_name;
                 }
             }
 
@@ -156,7 +156,7 @@ function wvpfpff_plugin_render_admin_page() {
             echo '<input type="hidden" name="parent_term_name" value="' . esc_attr($parent_term->name) . '">';
             
             // Display notifications for child terms
-            if ($added_items != $removed_items) {
+        if (!(count( $added_items ) == count( $removed_items ) && !array_diff( $added_items, $removed_items ))) {
                 if (!empty($added_items)) {
                     echo '<div class="update bad-news">';
                     echo '<p>Added items for models: ' . implode(', ', $added_items) . '</p>';
@@ -219,7 +219,7 @@ function wvpfpff_plugin_render_admin_page() {
 
         if (!empty($terms) && !is_wp_error($terms)) {
             foreach ($terms as $term) {
-                $category_name = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '_', $term->name));
+                $category_name = preg_replace('/[^a-zA-Z0-9]+/', ' ', str_replace('andamp', 'and', str_replace('&', 'and', $term->name)));
                 $products_cats[] = $category_name;
             }
         } else {
