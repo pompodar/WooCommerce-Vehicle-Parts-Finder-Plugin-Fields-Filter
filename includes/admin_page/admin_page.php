@@ -21,14 +21,15 @@ function wvpfpff_plugin_render_admin_page() {
     $parent_terms = get_terms(array(
         'taxonomy' => 'product_make',
         'parent' => 0, // Get only top-level parent terms
-        'hide_empty' => false, // Include empty terms in the result
+        'hide_empty' => true, // Exclude empty terms in the result
     ));
 
     $parent_term_names = array();
 
     if (!empty($parent_terms) && !is_wp_error($parent_terms)) {
         foreach ($parent_terms as $parent_term) {
-            $parent_term_names[] = $parent_term->name;
+            $parent_term_name = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '_', $parent_term->name));
+            $parent_term_names[] = $parent_term_name;
         }
     }
 
@@ -49,28 +50,37 @@ function wvpfpff_plugin_render_admin_page() {
     // Display the "plus" button and the sortable list
     echo '<div class="wrapper">';
     echo '<h1>Rearrange Orders</h1>';
-    echo '<h2>Makes</h2>';
-    echo '<button id="toggle-form">Show Makes</button>'; // Add a "plus" button
-    echo '<form method="post" id="sortable-form" style="display:none;">'; // Initially hide the form
+    echo '<h2 style="display: none">Makes</h2>';
+    echo '<button style="display: none" id="toggle-form">Show Makes</button>'; // Add a "plus" button
+    echo '<form style="display: none" method="post" id="sortable-form" style="display:none;">'; // Initially hide the form
     
     // Display notifications
-    if (!empty($added_items)) {
-        echo '<div class="update bad-news">
-            <p>Added items: ' . implode(', ', $added_items) . '</p>
-        </div>';
+    if ($added_items != $removed_items) {
+        if (!empty($added_items)) {
+            echo '<div class="update bad-news">';
+            echo '<p>Added items for makes: ' . implode(', ', $added_items) . '</p>';
+            echo '</div>';
+        } else {
+            echo '<div class="update good-news">';
+            echo '<p>No added items for makes</p>';
+            echo '</div>';
+        }
+        if (!empty($removed_items)) {
+            echo '<div class="update bad-news">';
+            echo '<p>Removed items for makes: ' . implode(', ', $removed_items) . '</p>';
+            echo '</div>';
+        } else {
+            echo '<div class="update good-news">';
+            echo '<p>No removed items for makes</p>';
+            echo '</div>';
+        }    
     } else {
-        echo '<div class="update good-news">
-            <p>No added items</p>
-        </div>';
-    }
-    if (!empty($removed_items)) {
-        echo '<div class="update bad-news">
-            <p>Removed items: ' . implode(', ', $removed_items) . '</p>
-        </div>';
-    } else {
-        echo '<div class="update good-news">
-            <p>No removed items</p>
-        </div>';
+        echo '<div class="update good-news">';
+        echo '<p>No added items for makes</p>';
+        echo '</div>';
+        echo '<div class="update good-news">';
+        echo '<p>No removed items for makes</p>';
+        echo '</div>';
     }
     
     if (!empty($added_items) || !empty($removed_items)) {
@@ -106,7 +116,7 @@ function wvpfpff_plugin_render_admin_page() {
             $children = get_terms(array(
                 'taxonomy' => 'product_make',
                 'parent' => $parent_term->term_id,
-                'hide_empty' => false, // Include empty terms in the result
+                'hide_empty' => true, // Exclude empty terms in the result
             ));
 
             $option_name = 'wvpfpff_plugin_' . $parent_term->name . 'models_item_order';
@@ -118,18 +128,19 @@ function wvpfpff_plugin_render_admin_page() {
             
             if (!empty($children) && !is_wp_error($children)) {
                 foreach ($children as $child_term) {
-                    $child_term_names[] = $child_term->name;
+                    $children_name = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '_', $child_term->name));
+                    $child_term_names[] = $category_name;
                 }
             }
+
+            // Retrieve possibly updated data for the combined list
+            $new_order = $child_term_names;
             
             // Check if there are additions (items in new order but not in the current order)
             $added_items = array_diff($child_term_names, $current_order);
 
             // Check if there are removals (items in current order but not in the new order)
             $removed_items = array_diff($current_order, $child_term_names);
-            
-            // Retrieve possibly updated data for the combined list
-            $new_order = $child_term_names;
 
             // Check if the user has submitted the form for this parent term
             if (isset($_POST['submit_' . $parent_term->term_id])) {
@@ -145,22 +156,31 @@ function wvpfpff_plugin_render_admin_page() {
             echo '<input type="hidden" name="parent_term_name" value="' . esc_attr($parent_term->name) . '">';
             
             // Display notifications for child terms
-            if (!empty($added_items)) {
-                echo '<div class="update bad-news">';
-                echo '<p>Added items for ' . esc_html($parent_term->name) . ': ' . implode(', ', $added_items) . '</p>';
-                echo '</div>';
+            if ($added_items != $removed_items) {
+                if (!empty($added_items)) {
+                    echo '<div class="update bad-news">';
+                    echo '<p>Added items for models: ' . implode(', ', $added_items) . '</p>';
+                    echo '</div>';
+                } else {
+                    echo '<div class="update good-news">';
+                    echo '<p>No added items for models</p>';
+                    echo '</div>';
+                }
+                if (!empty($removed_items)) {
+                    echo '<div class="update bad-news">';
+                    echo '<p>Removed items for models: ' . implode(', ', $removed_items) . '</p>';
+                    echo '</div>';
+                } else {
+                    echo '<div class="update good-news">';
+                    echo '<p>No removed items for models</p>';
+                    echo '</div>';
+                }    
             } else {
                 echo '<div class="update good-news">';
-                echo '<p>No added items for ' . esc_html($parent_term->name) . '</p>';
+                echo '<p>No added items for models</p>';
                 echo '</div>';
-            }
-            if (!empty($removed_items)) {
-                echo '<div class="update bad-news">';
-                echo '<p>Removed items for ' . esc_html($parent_term->name) . ': ' . implode(', ', $removed_items) . '</p>';
-                echo '</div>';
-            } else {
                 echo '<div class="update good-news">';
-                echo '<p>No removed items for ' . esc_html($parent_term->name) . '</p>';
+                echo '<p>No removed items for models</p>';
                 echo '</div>';
             }
 
@@ -186,6 +206,102 @@ function wvpfpff_plugin_render_admin_page() {
             echo '</ul>';
             echo '</form>';
             echo '</div>';
+            echo '<hr/>';
         }
+
+        // Categories
+        $products_cats = array();
+        
+        $terms = get_terms(array(
+            'taxonomy' => 'product_cat', // Taxonomy name for product categories
+            'hide_empty' => true,       // Exclude empty categories
+        ));
+
+        if (!empty($terms) && !is_wp_error($terms)) {
+            foreach ($terms as $term) {
+                $category_name = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '_', $term->name));
+                $products_cats[] = $category_name;
+            }
+        } else {
+            echo 'No product categories found.';
+        }
+        
+        $option_name = 'wvpfpff_plugin_category_item_order';
+
+        // Retrieve the stored order from the options
+        $current_order = get_option($option_name, array());
+        
+        // Retrieve possibly updated data for the combined list
+        $new_order = $products_cats;
+
+        // Check if there are additions (items in new order but not in the current order)
+        $added_items = array_diff($new_order, $current_order);
+
+        // Check if there are removals (items in current order but not in the new order)
+        $removed_items = array_diff($current_order, $new_order);
+
+        // Check if the user has submitted the form for this parent term
+        if (isset($_POST['submit_categories'])) {
+            update_option($option_name, $new_order);
+        }
+
+        // Display the sortable list with the current order for this parent term
+        echo '<div class="wrapper">';
+        echo '<h2>Categories</h2>';
+        echo '<button class="toggle-form-categories">Show Categories</button>'; // Add a "plus" button
+        echo '<form class="sortable-form-categories" method="post" style="display:none;">'; // Initially hide the form
+       
+        // Display notifications
+        if (!(count( $added_items ) == count( $removed_items ) && !array_diff( $added_items, $removed_items ))) {
+            if (!empty($added_items)) {
+                echo '<div class="update bad-news">';
+                echo '<p>Added items for categories: ' . implode(', ', $added_items) . '</p>';
+                echo '</div>';
+            } else {
+                echo '<div class="update good-news">';
+                echo '<p>No added items for categories</p>';
+                echo '</div>';
+            }
+            if (!empty($removed_items)) {
+                echo '<div class="update bad-news">';
+                echo '<p>Removed items for categories: ' . implode(', ', $removed_items) . '</p>';
+                echo '</div>';
+            } else {
+                echo '<div class="update good-news">';
+                echo '<p>No removed items for categories</p>';
+                echo '</div>';
+            }    
+        } else {
+            echo '<div class="update good-news">';
+            echo '<p>No added items for categories</p>';
+            echo '</div>';
+            echo '<div class="update good-news">';
+            echo '<p>No removed items for categories</p>';
+            echo '</div>';
+        }
+        
+        if (!empty($added_items) || !empty($removed_items)) {
+            echo '<input type="submit" name="submit_categories" value="Save Changes">';
+            echo '<p class="warning">Please update the page after saving!</p>';
+        }
+        echo '<div class="wvpfppff-admin-spinner-categories warning" style="display: none;">Loading...</div>';
+        echo '<ul id="sortable-list-categories" class="sortable-list-categories">';
+
+        if (!empty($current_order)) {
+            foreach ($current_order as $index => $item) {
+                // Use the $index as the ID for the list item
+                echo '<li class="sortable-item" id="' . esc_attr($index) . '">' . esc_html($item) . '</li>';
+            }
+        } else {
+            foreach ($new_order as $index => $item) {
+                // Use the $index as the ID for the list item
+                echo '<li class="sortable-item" id="' . esc_attr($index) . '">' . esc_html($item) . '</li>';
+            }
+        }
+
+        echo '</ul>';
+        echo '</form>';
+        echo '</div>';
+        echo '<href/>';
     }
 }

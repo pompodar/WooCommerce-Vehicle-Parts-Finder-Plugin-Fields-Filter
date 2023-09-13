@@ -26,8 +26,6 @@ jQuery(document).ready(function ($) {
                     order.push($(this).text());
                 });
 
-                console.log(order);
-
                 // Send the updated order via AJAX
                 $.ajax({
                     url: wvpfpff_filter_vars.ajaxurl,
@@ -52,5 +50,54 @@ jQuery(document).ready(function ($) {
                 });
             },
         });
+    });
+});
+
+// Categories
+jQuery(document).ready(function ($) {
+    // Toggle the form for each parent term and its children
+    $(".toggle-form-categories").on("click", function () {
+        const form = $(".sortable-form-categories");
+        form.slideToggle();
+
+        form.prev().text() == "Show Categories"
+            ? form.prev().text("Hide Categories")
+            : form.prev().text("Show Categories");
+    });
+
+    // Handle the sortable list
+    const sortableList = $("#sortable-list-categories");
+    sortableList.sortable({
+        update: function () {
+            // Update the order when items are rearranged
+            const order = [];
+            $(".wvpfppff-admin-spinner-categories").show();
+
+            sortableList.find(".sortable-item").each(function () {
+                order.push($(this).text());
+            });
+
+            // Send the updated order via AJAX
+            $.ajax({
+                url: wvpfpff_filter_vars.ajaxurl,
+                type: "POST",
+                data: {
+                    action: "wvpfpff_plugin_update_category_item_order",
+                    new_order: order,
+                },
+                success: function (response) {
+                    if (response.success) {
+                        // Display the success message to the user
+                        alert(response.data); // Show a pop-up message
+                        // You can also display the message in a div on the page if needed
+                    } else {
+                        // Display the error message to the user
+                        alert(response.data); // Show a pop-up message
+                        // You can also display the message in a div on the page if needed
+                    }
+                    $(".wvpfppff-admin-spinner-categories").hide();
+                },
+            });
+        },
     });
 });
