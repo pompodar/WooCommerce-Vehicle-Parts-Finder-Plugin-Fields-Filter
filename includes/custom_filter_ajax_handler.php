@@ -75,6 +75,7 @@ function custom_filter_ajax_handler() {
 
         // Output the filtered products
         if ($products_query->have_posts()) {
+            echo '<ul class="products columns-3">';
             while ($products_query->have_posts()) {
                 $products_query->the_post();
 
@@ -83,22 +84,25 @@ function custom_filter_ajax_handler() {
                 $product_title = get_the_title();
                 $product_price = get_post_meta($product_id, '_price', true);
                 $product_link = get_permalink();
+                $product_image = get_the_post_thumbnail_url($product_id, 'woocommerce_thumbnail');
 
-                if (!empty($product_price))  {
-                    echo '<div class="product">';
-                    echo '<h2><a href="' . esc_url($product_link) . '">' . esc_html($product_title) . '</a></h2>';
-                    echo '<p>Price: ' . wc_price($product_price) . '</p>';
-                    // Add more product information as necessary
-                    echo '</div>';
+                if (!empty($product_price)) {
+                    echo '<li class="product type-product status-publish instock has-post-thumbnail taxable shipping-taxable purchasable product-type-simple">';
+                    echo '<a href="' . $product_link . '" class="woocommerce-LoopProduct-link woocommerce-loop-product__link">';
+                    echo '<img src="' . $product_image . '" alt="' . $product_title . '" decoding="async" loading="lazy">';
+                    echo '<h2 class="woocommerce-loop-product__title">' . $product_title . '</h2>';
+                    echo '<span class="price"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">£</span>' . $product_price . '</bdi></span></span></a>';
+                    echo '<a href="?add-to-cart=' . $product_id . '" data-quantity="1" class="button product_type_simple add_to_cart_button ajax_add_to_cart" data-product_id="' . $product_id . '" data-product_sku="' . esc_attr($product_id) . '" aria-label="Add “' . $product_title . '” to your basket" rel="nofollow">Add to basket</a></li>';
                 }
             }
             wp_reset_postdata(); // Reset the post data
+            echo '</ul>';
         } else {
             echo 'No products found.'; // Output a message if no products match the criteria
         }
-
-        // Always die at the end of your AJAX function
-        die();
+            
+    // Always die at the end of your AJAX function
+    die();
     }
 }
 

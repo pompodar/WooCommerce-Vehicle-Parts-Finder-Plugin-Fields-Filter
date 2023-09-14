@@ -4,6 +4,7 @@
     justify-content: "center";
     align-items: "center";
     gap: 10px;
+    margin-bottom: 28px;
     position: relative;
 }
 
@@ -44,11 +45,7 @@
 .wvpfpff-unclickable {
     pointer-events: none;
     cursor: default;
-}
-
-.wvpfpff-clickable {
-    pointer-events: all;
-    cursor: pointer;
+    opacity: 0.6;
 }
 
 #custom-filter-form > input, #custom-filter-form > button {
