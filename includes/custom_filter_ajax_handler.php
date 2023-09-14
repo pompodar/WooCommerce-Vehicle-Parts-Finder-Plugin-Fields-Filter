@@ -48,7 +48,7 @@ function custom_filter_ajax_handler() {
         }
 
         // Add tax query condition for "year" if it's selected
-        if (!empty($filter_data['category'] && $filter_data['year'] != 'all')) {
+        if (!empty($filter_data['category'] && $filter_data['category'] != 'all')) {
             $args['tax_query'][] = array(
                 'taxonomy' => 'product_cat',
                 'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs

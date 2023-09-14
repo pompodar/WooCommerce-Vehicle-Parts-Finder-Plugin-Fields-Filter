@@ -53,7 +53,7 @@ function custom_filter_ajax_related_products_handler() {
                 'terms' => sanitize_text_field($filter_data['brand']),
                 'operator' => 'NOT IN',
             );
-        } if (!empty($filter_data['category'] && $filter_data['year'] != 'all')) {
+        } if (!empty($filter_data['category'] && $filter_data['category'] != 'all')) {
             $args['tax_query'][] = array(
                 'taxonomy' => 'product_make',
                 'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs
@@ -116,7 +116,7 @@ function custom_filter_ajax_related_products_handler() {
                 'terms' => sanitize_text_field($filter_data['model']),
                 'operator' => 'NOT IN',
             );
-        } if (!empty($filter_data['make'] && $filter_data['make'] != 'all')) {
+        } else if (!empty($filter_data['make'] && $filter_data['make'] != 'all')) {
             $args['tax_query'][] = array(
                 'taxonomy' => 'product_make',
                 'field' => 'name',
