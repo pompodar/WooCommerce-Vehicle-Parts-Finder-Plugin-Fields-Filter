@@ -80,7 +80,7 @@ jQuery(document).ready(function ($) {
                 success: function (response) {
                     $("#" + filter + "-filter").html(response);
                     $("#" + filter + "-filter").prop("disabled", false);
-console.log(response);
+
                     if (onPageLoad) {
                         const cookieName = filter + "-filter";
                         if (getCookie(cookieName)) {
@@ -193,13 +193,14 @@ console.log(response);
     });
 
     // Prevent the form from submitting normally
-    $("#custom-filter-form").on("submit", function (e) {
+    $("#wvpfpff-submit").on("click", function (e) {
         e.preventDefault();
+        alert(1);
 
         // Show the spinner while loading
         $("#wvpfpff-spinner").show();
 
-        const formData = $(this).serialize();
+        let formData = $(this).serialize();
 
         // Make an AJAX request to filter products
         $.ajax({
@@ -214,6 +215,9 @@ console.log(response);
 
                 // Hide the spinner after loading
                 $("#wvpfpff-spinner").hide();
+
+                // After the first AJAX call is complete, trigger the second AJAX call
+                loadRelatedProducts(formData);
             },
             complete: function () {
                 // Hide the spinner even if there was an error
@@ -221,6 +225,27 @@ console.log(response);
             },
         });
     });
+
+    // Function to make an AJAX request for related products
+    function loadRelatedProducts(formData) {
+        // Display the spinner
+        $("#wvpfpff-spinner").show();
+
+        $.ajax({
+            url: ajaxurl,
+            type: "POST",
+            data: {
+                action: "custom_filter_ajax_related_products_handler",
+                formData: formData,
+            },
+            success: function (response) {
+                $("#filter-results-related-products").html(response);
+
+                // Hide the spinner
+                $("#wvpfpff-spinner").hide();
+            },
+        });
+}
 
     // Function to clear a cookie by name
     function clearCookie(name) {
@@ -233,7 +258,7 @@ console.log(response);
         // Clear the selected filter values
         $(
             "#make-filter, #model-filter, #year-filter, #category-filter, #brand-filter"
-        ).val("");
+        ).val("all");
 
         // Clear the corresponding cookies
         clearCookie("make-filter");
@@ -244,11 +269,6 @@ console.log(response);
 
         // Disable dependent filters and clear their options
         $("#model-filter, #year-filter, #category-filter, #brand-filter")
-            .prop("disabled", true)
-            .empty()
-            .append('<option value="">Select</option>');
-
-        // Trigger the form submission to reset the product list (if needed)
-        $("#custom-filter-form").submit();
+            .prop("disabled", true);
     });
 });

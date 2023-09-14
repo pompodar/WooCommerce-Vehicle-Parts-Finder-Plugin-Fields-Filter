@@ -47,6 +47,7 @@ add_action('admin_menu', 'wvpfpff_plugin_admin_page');
     
 // Include main filter functionality files
 include(plugin_dir_path(__FILE__) . 'includes/custom_filter_ajax_handler.php');
+include(plugin_dir_path(__FILE__) . 'includes/custom_filter_ajax_related_products_handler.php');
 include(plugin_dir_path(__FILE__) . 'includes/custom_filter_itself_ajax_handler.php');
 
 // Include admin page files

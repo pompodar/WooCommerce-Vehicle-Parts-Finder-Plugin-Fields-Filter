@@ -105,7 +105,6 @@ function custom_filter_itself_ajax_handler() {
                             foreach ($child_terms as $child_term) {
                                 // Replace All years
                                 if ($filter == "year" && $child_term->name == "All Years") {
-                                    echo "crap________".$option."_______________";
                                     // Display child term information
                                     $options[] = '<option value="All Years">all possible</option>';
                                 } else {
