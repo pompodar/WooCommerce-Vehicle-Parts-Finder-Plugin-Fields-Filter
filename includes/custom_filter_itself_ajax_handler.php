@@ -129,7 +129,7 @@ function custom_filter_itself_ajax_handler() {
                         echo '<option class="wvpfpff-disabled" value="all" disabled>' . ucfirst($filter) . '</option>';
                         echo '<option value="all">All ' . ucfirst($filter) . 's' . '</option>';
                     } else {
-                        echo '<option class="wvpfpff-disabled" value="no" disabled>' . 'No ' . ucfirst($filter) . 's' . '</option>';
+                        echo '<option class="wvpfpff-disabled" value="all" disabled>' . 'No ' . ucfirst($filter) . 's' . '</option>';
                     }
                 } else {
                     // Output the model options
@@ -141,7 +141,7 @@ function custom_filter_itself_ajax_handler() {
                         echo '<option class="wvpfpff-disabled" value="all" disabled>' . ucfirst($filter) . '</option>';
                         echo '<option value="all">All ' . ucfirst($filter) . 's' . '</option>';
                     } else {
-                        echo '<option class="wvpfpff-disabled" value="no" disabled>' . 'No ' . ucfirst($filter) . 's' . '</option>';
+                        echo '<option class="wvpfpff-disabled" value="all" disabled>' . 'No ' . ucfirst($filter) . 's' . '</option>';
                     }   
                 }
             }
@@ -289,7 +289,7 @@ function custom_filter_itself_ajax_handler() {
                     echo '<option class="wvpfpff-disabled" value="all" disabled>' . ucfirst($filter) . '</option>';
                     echo '<option value="all">' . $allOptionText . '</option>';
                 } else {
-                    echo '<option value="no">' . 'No ' .  str_replace('All', '', $allOptionText) . '</option>';
+                    echo '<option value="all">' . 'No ' .  str_replace('All', '', $allOptionText) . '</option>';
                 }
             }
 
