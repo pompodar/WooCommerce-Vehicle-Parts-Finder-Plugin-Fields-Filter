@@ -99,23 +99,29 @@ function custom_filter_itself_ajax_handler() {
                         foreach ($options_array as $option) {
                             // Display child term information
                             $options[] = '<option value="' . esc_attr($option) . '">' . esc_html($option) . '</option>';
-                        }
+                         }
                     } else {
                         if (!empty($child_terms) && !is_wp_error($child_terms)) {
                             foreach ($child_terms as $child_term) {
-                                // Display child term information
-                                $options[] = '<option value="' . esc_attr($child_term->name) . '">' . esc_html($child_term->name) . '</option>';
+                                // Replace All years
+                                if ($filter == "year" && $child_term->name == "All Years") {
+                                    echo "crap________".$option."_______________";
+                                    // Display child term information
+                                    $options[] = '<option value="All Years">all possible</option>';
+                                } else {
+                                    // Display child term information
+                                    $options[] = '<option value="' . esc_attr($child_term->name) . '">' . esc_html($child_term->name) . '</option>';
+                                }                            
                             }
                         }
                     }
                 }
                 
                 // Reverse years
-
                 if ($filter == 'year') {
                     $reversed_options = array_reverse($options);
 
-                    // Output the model options
+                    // Output the year options
                     if (!empty($reversed_options)) {
                         echo '<option class="wvpfpff-disabled" value="all" disabled>' . ucfirst($filter) . '</option>';
                         echo '<option value="all">All ' . ucfirst($filter) . 's' . '</option>';
@@ -261,7 +267,7 @@ function custom_filter_itself_ajax_handler() {
                             $sorted_options[] = $custom_ordered_brands[$i];
                         }
                     } 
-var_dump($custom_ordered_brands);
+
                     // Loop through the unique tags names and add them to the options array
                     foreach ($sorted_options as $tag_name) {
                         $options[] = '<option value="' . esc_attr($tag_name) . '">' . esc_html($tag_name) . '</option>';
@@ -287,7 +293,7 @@ var_dump($custom_ordered_brands);
                     echo '<option value="no">' . 'No ' .  str_replace('All', '', $allOptionText) . '</option>';
                 }
             }
-            var_dump($brand_order_by);
+
             // Always die at the end of your AJAX function
             die();
         }

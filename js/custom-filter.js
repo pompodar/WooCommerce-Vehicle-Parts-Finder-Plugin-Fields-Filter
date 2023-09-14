@@ -80,7 +80,7 @@ jQuery(document).ready(function ($) {
                 success: function (response) {
                     $("#" + filter + "-filter").html(response);
                     $("#" + filter + "-filter").prop("disabled", false);
-
+console.log(response);
                     if (onPageLoad) {
                         const cookieName = filter + "-filter";
                         if (getCookie(cookieName)) {
@@ -143,38 +143,42 @@ jQuery(document).ready(function ($) {
             // Save the selection in a cookie
             setCookie(filterId, filterValue);
 
-            // Enable and load options for the next filter
-            let nextFilterId = "";
-            if (filterId === "make-filter") {
-                nextFilterId = "model-filter";
-            } else if (filterId === "model-filter") {
-                nextFilterId = "year-filter";
-            } else if (filterId === "year-filter") {
-                nextFilterId = "category-filter";
-            } else if (filterId === "category-filter") {
-                nextFilterId = "brand-filter";
-            }
+            // In case not all is selected
+            if (filterValue != "all") {
+                // Enable and load options for the next filter
+                let nextFilterId = "";
+                if (filterId === "make-filter") {
+                    nextFilterId = "model-filter";
+                } else if (filterId === "model-filter") {
+                    nextFilterId = "year-filter";
+                } else if (filterId === "year-filter") {
+                    nextFilterId = "category-filter";
+                } else if (filterId === "category-filter") {
+                    nextFilterId = "brand-filter";
+                }
 
-            if (nextFilterId) {
-                // Clear the next filters' values except the first next one
-                $(`#${nextFilterId}`).val("all");
-                $(`#${nextFilterId}`)
-                    .nextAll("select")
-                    .val("all").prop("disabled", true);
+                if (nextFilterId) {
+                    // Clear the next filters' values except the first next one
+                    $(`#${nextFilterId}`).val("all");
+                    $(`#${nextFilterId}`)
+                        .nextAll("select")
+                        .val("all")
+                        .prop("disabled", true);
 
-                // Clear the corresponding cookies for the next filters
-                $(`#${nextFilterId}`)
-                    .nextAll("select")
-                    .each(function () {
-                        const cookieName = $(this).attr("id");
-                        clearCookie(cookieName);
-                    });
+                    // Clear the corresponding cookies for the next filters
+                    $(`#${nextFilterId}`)
+                        .nextAll("select")
+                        .each(function () {
+                            const cookieName = $(this).attr("id");
+                            clearCookie(cookieName);
+                        });
 
-                await loadOptions(
-                    nextFilterId.replace("-filter", ""),
-                    filterValue,
-                    0
-                );
+                    await loadOptions(
+                        nextFilterId.replace("-filter", ""),
+                        filterValue,
+                        0
+                    );
+                }
             }
         }
     );
