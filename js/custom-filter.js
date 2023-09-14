@@ -21,24 +21,45 @@ jQuery(document).ready(function ($) {
             $("#custom-filter-form").addClass("wvpfpff-unclickable");
 
             const make = $("#make-filter").val();
-            const model = $("#model-filter").val()
-                ? $("#model-filter").val()
-                : getCookie("model-filter");
-            const year = $("#year-filter").val()
-                ? $("#year-filter").val()
-                : getCookie("year-filter");
-            const category = $("#category-filter").val()
-                ? $("#category-filter").val()
-                : getCookie("category-filter");
-            const brand = $("#brand-filter").val()
-                ? $("#brand-filter").val()
-                : getCookie("brand-filter");
+
+            let model, year, category, brand;
+
+            if ($("#model-filter").val()) {
+                model = $("#model-filter").val();
+            } else if (getCookie("model-filter")) {
+                model = getCookie("model-filter");
+            } else {
+                model = "all";
+            }
+
+            if ($("#year-filter").val()) {
+                year = $("#year-filter").val();
+            } else if (getCookie("year-filter")) {
+                year = getCookie("year-filter");
+            } else {
+                year = "all";
+            }
+
+            if ($("#category-filter").val()) {
+                category = $("#category-filter").val();
+            } else if (getCookie("category-filter")) {
+                category = getCookie("category-filter");
+            } else {
+                category = "all";
+            }
+
+            if ($("#brand-filter").val()) {
+                brand = $("#brand-filter").val();
+            } else if (getCookie("brand-filter")) {
+                brand = getCookie("brand-filter");
+            } else {
+                brand = "all";
+            }
 
             const modelOrderBy = $("#model-filter").data().modelOrderBy;
             const categoryOrderBy =
                 $("#category-filter").data().categoryOrderBy;
-            const brandOrderBy =
-                $("#brand-filter").data().tagOrderBy;
+            const brandOrderBy = $("#brand-filter").data().tagOrderBy;
 
             $.ajax({
                 url: ajaxurl,
@@ -59,26 +80,27 @@ jQuery(document).ready(function ($) {
                 success: function (response) {
                     $("#" + filter + "-filter").html(response);
                     $("#" + filter + "-filter").prop("disabled", false);
-console.log(response);
+
                     if (onPageLoad) {
                         const cookieName = filter + "-filter";
-                        $("#" + cookieName).val(getCookie(cookieName));
+                        if (getCookie(cookieName)) {
+                            $("#" + cookieName).val(getCookie(cookieName));
+                        } else {
+                            $("#" + cookieName).val("all");
+                        }
                     }
 
                     // Hide the spinner after loading and make the form clickable
                     $("#wvpfpff-spinner").hide();
-                    $("#custom-filter-form").removeClass(
-                        "wvpfpff-unclickable"
-                    );
+                    $("#custom-filter-form").removeClass("wvpfpff-unclickable");
 
                     // Resolve the promise when the operation is complete
                     resolve();
                 },
                 complete: function () {
                     // Hide the spinner even if there was an error and make the form clickable
-                    $("#wvpfpff-spinner").hide();$("#custom-filter-form").removeClass(
-                        "wvpfpff-unclickable"
-                    );
+                    $("#wvpfpff-spinner").hide();
+                    $("#custom-filter-form").removeClass("wvpfpff-unclickable");
                 },
             });
         });
@@ -86,9 +108,9 @@ console.log(response);
 
     // When the page loads, populate the "make" form fields with saved values
     async function onPageLoadFunc() {
-        $("#make-filter").val(getCookie("make-filter"));
-
         if (getCookie("make-filter")) {
+            $("#make-filter").val(getCookie("make-filter"));
+
             await $("#model-filter").prop("disabled", false);
             await loadOptions("model", getCookie("make-filter"), 1);
         }
@@ -134,12 +156,25 @@ console.log(response);
             }
 
             if (nextFilterId) {
+                // Clear the next filters' values except the first next one
+                $(`#${nextFilterId}`).val("all");
+                $(`#${nextFilterId}`)
+                    .nextAll("select")
+                    .val("all").prop("disabled", true);
+
+                // Clear the corresponding cookies for the next filters
+                $(`#${nextFilterId}`)
+                    .nextAll("select")
+                    .each(function () {
+                        const cookieName = $(this).attr("id");
+                        clearCookie(cookieName);
+                    });
+
                 await loadOptions(
                     nextFilterId.replace("-filter", ""),
                     filterValue,
                     0
                 );
-                $("#" + nextFilterId).prop("disabled", false);
             }
         }
     );
