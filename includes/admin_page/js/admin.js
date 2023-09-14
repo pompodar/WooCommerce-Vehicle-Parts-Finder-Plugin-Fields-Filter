@@ -35,6 +35,7 @@ jQuery(document).ready(function ($) {
                         new_order: order,
                         make,
                     },
+                    cache: false,
                     success: function (response) {
                         if (response.success) {
                             // Display the success message to the user
@@ -85,6 +86,7 @@ jQuery(document).ready(function ($) {
                     action: "wvpfpff_plugin_update_category_item_order",
                     new_order: order,
                 },
+                cache: false,
                 success: function (response) {
                     if (response.success) {
                         // Display the success message to the user
@@ -134,6 +136,7 @@ jQuery(document).ready(function ($) {
                     action: "wvpfpff_plugin_update_tag_item_order",
                     new_order: order,
                 },
+                cache: false,
                 success: function (response) {
                     if (response.success) {
                         // Display the success message to the user

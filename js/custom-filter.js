@@ -83,6 +83,7 @@ jQuery(document).ready(function ($) {
                     category_order_by: categoryOrderBy,
                     brand_order_by: brandOrderBy,
                 },
+                cache: false,
                 success: function (response) {
                     $("#" + filter + "-filter").html(response);
                     $("#" + filter + "-filter").prop("disabled", false);
@@ -219,6 +220,7 @@ jQuery(document).ready(function ($) {
                 action: "custom_filter_ajax_handler",
                 formData: formData,
             },
+            cache: false,
             success: function (response) {
                 $("#filter-results").html(response);
 
@@ -238,6 +240,7 @@ jQuery(document).ready(function ($) {
                 action: "custom_filter_ajax_related_products_handler",
                 formData: formData,
             },
+            cache: false,
             success: function (response) {
                 $("#filter-results-related-products").html(response);
 
