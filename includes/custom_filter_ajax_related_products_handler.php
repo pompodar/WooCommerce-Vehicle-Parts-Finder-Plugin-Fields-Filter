@@ -17,131 +17,114 @@ function custom_filter_ajax_related_products_handler() {
         // Initialize the tax_query array
         $args['tax_query'] = array();
 
-        // Add tax query condition for "make" if it's selected
-        if (!empty($filter_data['make'] && $filter_data['make'] != 'all')) {
-            $args['tax_query'][] = array(
-                'taxonomy' => 'product_make',
-                'field' => 'name',
-                'terms' => sanitize_text_field($filter_data['make']),
-                'operator' => 'NOT IN',
-            );
-        }
-
-        // Add tax query condition for "model" if it's selected
-        if (!empty($filter_data['model'] && $filter_data['model'] != 'all')) {
-            $args['tax_query'][] = array(
-                'taxonomy' => 'product_make',
-                'field' => 'name',
-                'terms' => sanitize_text_field($filter_data['make']),
-                'operator' => 'NOT IN',
-            );
-
-            var_dump("model");
-            
+        // Add tax query conditions
+        if (!empty($filter_data['brand'] && $filter_data['brand'] != 'all')) {
             $args['tax_query'][] = array(
                 'taxonomy' => 'product_make',
                 'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs
+                'terms' => sanitize_text_field($filter_data['make']),
+                'operator' => 'IN',
+            );
+            
+            $args['tax_query'][] = array(
+                'taxonomy' => 'product_make',
+                'field' => 'name',
                 'terms' => sanitize_text_field($filter_data['model']),
                 'operator' => 'IN',
             );
-
-        }
-
-        // Add tax query condition for "year" if it's selected
-        if (!empty($filter_data['year'] && $filter_data['year'] != 'all')) {
+            
             $args['tax_query'][] = array(
                 'taxonomy' => 'product_make',
                 'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs
                 'terms' => sanitize_text_field($filter_data['year']),
-                'operator' => 'NOT IN',
-            );
-            
-            $args['tax_query'][] = array(
-                'taxonomy' => 'product_make',
-                'field' => 'name',
-                'terms' => sanitize_text_field($filter_data['make']),
                 'operator' => 'IN',
             );
-            
-            $args['tax_query'][] = array(
-                'taxonomy' => 'product_make',
-                'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs
-                'terms' => sanitize_text_field($filter_data['model']),
-                'operator' => 'IN',
-            );
-        }
 
-        // Add tax query condition for "year" if it's selected
-        if (!empty($filter_data['category'] && $filter_data['year'] != 'all')) {
             $args['tax_query'][] = array(
                 'taxonomy' => 'product_cat',
                 'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs
                 'terms' => sanitize_text_field($filter_data['category']),
-                'operator' => 'NOT IN',
+                'operator' => 'IN',
             );
 
-            $args['tax_query'][] = array(
-                'taxonomy' => 'product_make',
-                'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs
-                'terms' => sanitize_text_field($filter_data['year']),
-                'operator' => 'IN',
-            );
-            
-            $args['tax_query'][] = array(
-                'taxonomy' => 'product_make',
-                'field' => 'name',
-                'terms' => sanitize_text_field($filter_data['make']),
-                'operator' => 'IN',
-            );
-            
-            $args['tax_query'][] = array(
-                'taxonomy' => 'product_make',
-                'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs
-                'terms' => sanitize_text_field($filter_data['model']),
-                'operator' => 'IN',
-            );
-        }
-
-        // Add tax query condition for a specific product tag if it's selected
-        if (!empty($filter_data['brand'] && $filter_data['brand'] != 'all')) {
             $args['tax_query'][] = array( 
                 'taxonomy' => 'product_tag',
                 'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs
                 'terms' => sanitize_text_field($filter_data['brand']),
                 'operator' => 'NOT IN',
             );
-
-            $args['tax_query'][] = array(
-                'taxonomy' => 'product_cat',
-                'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs
-                'terms' => sanitize_text_field($filter_data['category']),
-                'operator' => 'IN',
-            );
-
+        } if (!empty($filter_data['category'] && $filter_data['year'] != 'all')) {
             $args['tax_query'][] = array(
                 'taxonomy' => 'product_make',
                 'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs
-                'terms' => sanitize_text_field($filter_data['year']),
-                'operator' => 'IN',
-            );
-            
-            $args['tax_query'][] = array(
-                'taxonomy' => 'product_make',
-                'field' => 'name',
                 'terms' => sanitize_text_field($filter_data['make']),
                 'operator' => 'IN',
             );
             
             $args['tax_query'][] = array(
                 'taxonomy' => 'product_make',
-                'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs
+                'field' => 'name',
                 'terms' => sanitize_text_field($filter_data['model']),
                 'operator' => 'IN',
             );
-        }
+            
+            $args['tax_query'][] = array(
+                'taxonomy' => 'product_make',
+                'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs
+                'terms' => sanitize_text_field($filter_data['year']),
+                'operator' => 'IN',
+            );
 
-
-
+            $args['tax_query'][] = array(
+                'taxonomy' => 'product_cat',
+                'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs
+                'terms' => sanitize_text_field($filter_data['category']),
+                'operator' => 'NOT IN',
+            );
+        } else if (!empty($filter_data['year'] && $filter_data['year'] != 'all')) {
+            $args['tax_query'][] = array(
+                'taxonomy' => 'product_make',
+                'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs
+                'terms' => sanitize_text_field($filter_data['modal']),
+                'operator' => 'IN',
+            );
+            
+            $args['tax_query'][] = array(
+                'taxonomy' => 'product_make',
+                'field' => 'name',
+                'terms' => sanitize_text_field($filter_data['modal']),
+                'operator' => 'IN',
+            );
+            
+            $args['tax_query'][] = array(
+                'taxonomy' => 'product_make',
+                'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs
+                'terms' => sanitize_text_field($filter_data['year']),
+                'operator' => 'NOT IN',
+            );
+        } else if (!empty($filter_data['model'] && $filter_data['model'] != 'all')) {
+            $args['tax_query'][] = array(
+                'taxonomy' => 'product_make',
+                'field' => 'name', // You can use 'slug' or 'term_id' depending on your needs
+                'terms' => sanitize_text_field($filter_data['make']),
+                'operator' => 'IN',
+            );
+            
+            $args['tax_query'][] = array(
+                'taxonomy' => 'product_make',
+                'field' => 'name',
+                'terms' => sanitize_text_field($filter_data['model']),
+                'operator' => 'NOT IN',
+            );
+        } if (!empty($filter_data['make'] && $filter_data['make'] != 'all')) {
+            $args['tax_query'][] = array(
+                'taxonomy' => 'product_make',
+                'field' => 'name',
+                'terms' => sanitize_text_field($filter_data['make']),
+                'operator' => 'NOT IN',
+            );
+        } 
+        
         // Set the relation parameter to 'AND' to require both conditions to be met
         $args['tax_query']['relation'] = 'AND';
 
@@ -150,8 +133,11 @@ function custom_filter_ajax_related_products_handler() {
 
         // Output the filtered products
         if ($products_query->have_posts()) {
+            $total_posts = $products_query->post_count;
+            
             echo '<h2>Related Products</h2>';
             echo '<ul class="products columns-3">';
+            echo '<p>' . $total_posts . ' found</p>';
             while ($products_query->have_posts()) {
                 $products_query->the_post();
 
@@ -173,11 +159,9 @@ function custom_filter_ajax_related_products_handler() {
             }
             wp_reset_postdata(); // Reset the post data
             echo '</ul>';
-        } else {
-            echo 'No products found.'; // Output a message if no products match the criteria
         }
-    // Always die at the end of your AJAX function
-    die();
+        // Always die at the end of your AJAX function
+        die();
     }
 }
 

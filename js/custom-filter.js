@@ -18,6 +18,12 @@ jQuery(document).ready(function ($) {
         return new Promise((resolve, reject) => {
             // Show the spinner while loading and make the form unclikable
             $("#wvpfpff-spinner").show();
+
+            // Disable keyboard
+            $("#custom-filter-form").keydown(function (event) {
+                return false;
+            });
+
             $("#custom-filter-form").addClass("wvpfpff-unclickable");
 
             const make = $("#make-filter").val();
@@ -199,9 +205,11 @@ jQuery(document).ready(function ($) {
         // Show the spinner while loading
         $("#wvpfpff-spinner").show();
 
-        let formData = $(this).serialize();
+        $("#custom-filter-form").keydown(function (event) {
+            return false;
+        });
 
-        console.log(formData);
+        let formData = $(this).serialize();
 
         // Make an AJAX request to filter products
         $.ajax({
@@ -214,24 +222,15 @@ jQuery(document).ready(function ($) {
             success: function (response) {
                 $("#filter-results").html(response);
 
-                // Hide the spinner after loading
-                $("#wvpfpff-spinner").hide();
-
                 // After the first AJAX call is complete, trigger the second AJAX call
                 loadRelatedProducts(formData);
-            },
-            complete: function () {
-                // Hide the spinner even if there was an error
-                $("#wvpfpff-spinner").hide();
             },
         });
     });
 
     // Function to make an AJAX request for related products
     function loadRelatedProducts(formData) {
-        // Display the spinner
-        $("#wvpfpff-spinner").show();
-
+        console.log(formData);
         $.ajax({
             url: ajaxurl,
             type: "POST",

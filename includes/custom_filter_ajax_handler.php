@@ -78,7 +78,7 @@ function custom_filter_ajax_handler() {
             $total_posts = $products_query->post_count;
             
             echo '<ul class="products columns-3">';
-            echo '<p>' . $total_posts . ' found';
+            echo '<p>' . $total_posts . ' found</p>';
             while ($products_query->have_posts()) {
                 $products_query->the_post();
 
