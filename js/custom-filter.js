@@ -62,10 +62,10 @@ jQuery(document).ready(function ($) {
                 brand = "all";
             }
 
-            const modelOrderBy = $("#model-filter").data().modelOrderBy;
+            const modelOrderBy = $("#model-filter").data() ? $("#model-filter").data().modelOrderBy : null;
             const categoryOrderBy =
-                $("#category-filter").data().categoryOrderBy;
-            const brandOrderBy = $("#brand-filter").data().tagOrderBy;
+                $("#category-filter").data() ? $("#category-filter").data().categoryOrderBy : null;
+            const brandOrderBy = $("#brand-filter").data() ? $("#brand-filter").data().tagOrderBy : null;
 
             $.ajax({
                 url: ajaxurl,
