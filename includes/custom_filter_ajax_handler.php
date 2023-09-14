@@ -75,7 +75,10 @@ function custom_filter_ajax_handler() {
 
         // Output the filtered products
         if ($products_query->have_posts()) {
+            $total_posts = $products_query->post_count;
+            
             echo '<ul class="products columns-3">';
+            echo '<p>' . $total_posts . ' found';
             while ($products_query->have_posts()) {
                 $products_query->the_post();
 
@@ -96,7 +99,7 @@ function custom_filter_ajax_handler() {
                 }
             }
             wp_reset_postdata(); // Reset the post data
-            echo '</ul>';
+            echo '</p>';
         } else {
             echo 'No products found.'; // Output a message if no products match the criteria
         }

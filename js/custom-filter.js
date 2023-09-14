@@ -193,14 +193,15 @@ jQuery(document).ready(function ($) {
     });
 
     // Prevent the form from submitting normally
-    $("#wvpfpff-submit").on("click", function (e) {
+    $("#custom-filter-form").on("submit", function (e) {
         e.preventDefault();
-        alert(1);
 
         // Show the spinner while loading
         $("#wvpfpff-spinner").show();
 
         let formData = $(this).serialize();
+
+        console.log(formData);
 
         // Make an AJAX request to filter products
         $.ajax({
