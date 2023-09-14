@@ -59,7 +59,7 @@ jQuery(document).ready(function ($) {
                 success: function (response) {
                     $("#" + filter + "-filter").html(response);
                     $("#" + filter + "-filter").prop("disabled", false);
-
+console.log(response);
                     if (onPageLoad) {
                         const cookieName = filter + "-filter";
                         $("#" + cookieName).val(getCookie(cookieName));

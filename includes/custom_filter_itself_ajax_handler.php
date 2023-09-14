@@ -110,17 +110,34 @@ function custom_filter_itself_ajax_handler() {
                     }
                 }
                 
+                // Reverse years
 
-                // Output the model options
-                if (!empty($options)) {
-                    echo '<option class="wvpfpff-disabled" value="" disabled>' . ucfirst($filter) . '</option>';
-                    echo '<option value="all">All ' . ucfirst($filter) . 's' . '</option>';
-                    echo implode('', $options);
-                } else if ($parent_term_name == 'all') {
-                    echo '<option class="wvpfpff-disabled" value="" disabled>' . ucfirst($filter) . '</option>';
-                    echo '<option value="all">All ' . ucfirst($filter) . 's' . '</option>';
+                if ($filter == 'year') {
+                    $reversed_options = array_reverse($options);
+
+                    // Output the model options
+                    if (!empty($reversed_options)) {
+                        echo '<option class="wvpfpff-disabled" value="" disabled>' . ucfirst($filter) . '</option>';
+                        echo '<option value="all">All ' . ucfirst($filter) . 's' . '</option>';
+                        echo implode('', $reversed_options);
+                    } else if ($parent_term_name == 'all') {
+                        echo '<option class="wvpfpff-disabled" value="" disabled>' . ucfirst($filter) . '</option>';
+                        echo '<option value="all">All ' . ucfirst($filter) . 's' . '</option>';
+                    } else {
+                        echo '<option class="wvpfpff-disabled" value="no" disabled>' . 'No ' . ucfirst($filter) . 's' . '</option>';
+                    }
                 } else {
-                    echo '<option class="wvpfpff-disabled" value="no" disabled>' . 'No ' . ucfirst($filter) . 's' . '</option>';
+                    // Output the model options
+                    if (!empty($options)) {
+                        echo '<option class="wvpfpff-disabled" value="" disabled>' . ucfirst($filter) . '</option>';
+                        echo '<option value="all">All ' . ucfirst($filter) . 's' . '</option>';
+                        echo implode('', $options);
+                    } else if ($parent_term_name == 'all') {
+                        echo '<option class="wvpfpff-disabled" value="" disabled>' . ucfirst($filter) . '</option>';
+                        echo '<option value="all">All ' . ucfirst($filter) . 's' . '</option>';
+                    } else {
+                        echo '<option class="wvpfpff-disabled" value="no" disabled>' . 'No ' . ucfirst($filter) . 's' . '</option>';
+                    }   
                 }
             }
 
