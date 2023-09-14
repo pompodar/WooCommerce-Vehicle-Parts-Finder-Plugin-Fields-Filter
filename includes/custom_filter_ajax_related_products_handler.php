@@ -160,6 +160,54 @@ function custom_filter_ajax_related_products_handler() {
             wp_reset_postdata(); // Reset the post data
             echo '</ul>';
         }
+
+        $woo_vpf_taxonomy_metabox_excluded_products = WC_Admin_Settings::get_option( 'woo_vpf_taxonomy_metabox_excluded_products' );
+
+        if (!empty($woo_vpf_taxonomy_metabox_excluded_products)) {
+            // Convert the product IDs to an array of integers
+            $product_ids = array_map('intval', $woo_vpf_taxonomy_metabox_excluded_products);
+
+            // Query products based on the IDs
+            $args = array(
+                'post_type' => 'product',
+                'post__in' => $product_ids,
+                'posts_per_page' => -1,  // Display all matching products
+            );
+
+            $products_query = new WP_Query($args);
+
+            if ($products_query->have_posts()) {
+                $total_posts = $products_query->post_count;
+
+                echo '<h2>Universal Products</h2>';
+                echo '<ul class="products columns-3">';
+                echo '<p>' . $total_posts . ' found</p>';
+                while ($products_query->have_posts()) {
+                    $products_query->the_post();
+
+                    // Display the product information here
+                    $product_id = get_the_ID();
+                    $product_title = get_the_title();
+                    $product_price = get_post_meta($product_id, '_price', true);
+                    $product_link = get_permalink();
+                    $product_image = get_the_post_thumbnail_url($product_id, 'woocommerce_thumbnail');
+
+                    if (!empty($product_price)) {
+                        echo '<li class="product type-product status-publish instock has-post-thumbnail taxable shipping-taxable purchasable product-type-simple">';
+                        echo '<a href="' . $product_link . '" class="woocommerce-LoopProduct-link woocommerce-loop-product__link">';
+                        echo '<img src="' . $product_image . '" alt="' . $product_title . '" decoding="async" loading="lazy">';
+                        echo '<h2 class="woocommerce-loop-product__title">' . $product_title . '</h2>';
+                        echo '<span class="price"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">£</span>' . $product_price . '</bdi></span></span></a>';
+                        echo '<a href="?add-to-cart=' . $product_id . '" data-quantity="1" class="button product_type_simple add_to_cart_button ajax_add_to_cart" data-product_id="' . $product_id . '" data-product_sku="' . esc_attr($product_id) . '" aria-label="Add “' . $product_title . '” to your basket" rel="nofollow">Add to basket</a></li>';
+                    }
+                }
+                wp_reset_postdata(); // Reset the post data
+                echo '</ul>';
+            } else {
+                echo 'No products found.'; // Output a message if no products match the criteria
+            }
+        }
+
         // Always die at the end of your AJAX function
         die();
     }

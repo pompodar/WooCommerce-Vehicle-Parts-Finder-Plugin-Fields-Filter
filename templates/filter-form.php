@@ -19,6 +19,7 @@ if (!empty($all_terms) && !is_wp_error($all_terms)) {
     }
 }
 ?>
+<h2>SHOP FOR YOUR BIKE</h2>
 <form id="custom-filter-form">
     <div id="wvpfpff-spinner"></div>
     <!-- Make Filter -->
