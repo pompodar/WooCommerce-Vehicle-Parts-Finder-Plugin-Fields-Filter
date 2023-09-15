@@ -125,7 +125,8 @@ jQuery(document).ready(function ($) {
             $(".wvpfppff-admin-spinner-tags").show();
 
             sortableList.find(".sortable-item").each(function () {
-                order.push($(this).text());
+                order.push($(this).data().product);
+                console.log($(this).data().product);
             });
 
             // Send the updated order via AJAX

@@ -306,6 +306,8 @@ function wvpfpff_plugin_render_admin_page() {
 
     // Tags
     $products_tags = array();
+    $products_tags_ids = array();
+
     
     $terms = get_terms(array(
         'taxonomy' => 'product_tag', // Taxonomy name for product tags
@@ -314,8 +316,12 @@ function wvpfpff_plugin_render_admin_page() {
 
     if (!empty($terms) && !is_wp_error($terms)) {
         foreach ($terms as $term) {
-            $tag_name = preg_replace('/[^a-zA-Z0-9]+/', ' ', str_replace('andamp', 'and', str_replace('&', 'and', $term->name)));
+            $tag_name = $term->name;
+            $tag_id = $term->term_id;
+            
             $products_tags[] = $tag_name;
+            $products_tags_ids[] = $tag_id;
+
         }
     } else {
         echo 'No product tags found.';
@@ -327,7 +333,7 @@ function wvpfpff_plugin_render_admin_page() {
     $current_order = get_option($option_name, array());
     
     // Retrieve possibly updated data for the combined list
-    $new_order = $products_tags;
+    $new_order = $products_tags_ids;
 
     // Check if there are additions (items in new order but not in the current order)
     $added_items = array_diff($new_order, $current_order);
@@ -337,7 +343,7 @@ function wvpfpff_plugin_render_admin_page() {
 
     // Check if the user has submitted the form for this parent term
     if (isset($_POST['submit_tags'])) {
-        update_option($option_name, $new_order);
+        update_option($option_name, $products_tags_ids);
     }
 
     // Display the sortable list with the current order 
@@ -385,12 +391,12 @@ function wvpfpff_plugin_render_admin_page() {
     if (!empty($current_order)) {
         foreach ($current_order as $index => $item) {
             // Use the $index as the ID for the list item
-            echo '<li class="sortable-item" id="' . esc_attr($index) . '">' . esc_html($item) . '</li>';
+            echo '<li data-product="' .esc_html($item) . '" class="sortable-item" id="' . esc_attr($index) . '">' . esc_html(get_term($item, 'product_tag')->name) . '</li>';
         }
     } else {
         foreach ($new_order as $index => $item) {
             // Use the $index as the ID for the list item
-            echo '<li class="sortable-item" id="' . esc_attr($index) . '">' . esc_html($item) . '</li>';
+            echo '<li data-product="' .esc_html($products_tags_ids[$index]) . '" class="sortable-item" id="' . esc_attr($index->name) . '">' . esc_html($item) . '</li>';
         }
     }
 
