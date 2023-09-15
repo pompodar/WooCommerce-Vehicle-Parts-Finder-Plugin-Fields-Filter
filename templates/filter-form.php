@@ -24,7 +24,7 @@ if (!empty($all_terms) && !is_wp_error($all_terms)) {
     <div id="wvpfpff-spinner"></div>
     <!-- Make Filter -->
     <select id="make-filter" name="make">
-        <option value="all" selected class="wvpfpff-disabled">Make</option>
+        <option value="all" selected class="wvpfpff-disabled wvpfpff-bold">Make</option>
         <option value="all">All Makes</option>
         <?php
         foreach ($make_options as $value) {
@@ -36,14 +36,14 @@ if (!empty($all_terms) && !is_wp_error($all_terms)) {
 
     <!-- Model Filter (Initially Disabled) -->
     <select data-model-order-by="<?php echo $model_order_by; ?>" id="model-filter" name="model" disabled>
-        <option value="all" selected class="wvpfpff-disabled">Model</option>
+        <option value="all" selected class="wvpfpff-disabled wvpfpff-bold">Model</option>
         <option value="all">All Models</option>
         <!-- Options for models will be loaded dynamically using JavaScript -->
     </select>
 
     <!-- Year Filter (Initially Disabled) -->
     <select id="year-filter" name="year" disabled>
-        <option value="all" selected class="wvpfpff-disabled">Year</option>
+        <option value="all" selected class="wvpfpff-disabled wvpfpff-bold">Year</option>
         <option value="all">All Years</option>
 
         <!-- Options for years will be loaded dynamically using JavaScript -->
@@ -51,7 +51,7 @@ if (!empty($all_terms) && !is_wp_error($all_terms)) {
 
     <!-- Category Filter (Initially Disabled) -->
     <select data-category-order-by="<?php echo $category_order_by; ?>" id="category-filter" name="category" disabled>
-        <option value="all" selected class="wvpfpff-disabled">Category</option>
+        <option value="all" selected class="wvpfpff-disabled wvpfpff-bold">Category</option>
         <option value="all">All Categories</option>
 
         <!-- Options for categories will be loaded dynamically using JavaScript -->
@@ -59,7 +59,7 @@ if (!empty($all_terms) && !is_wp_error($all_terms)) {
 
     <!-- Brand Filter (Initially Disabled) -->
     <select data-tag-order-by="<?php echo $brand_order_by; ?>" id="brand-filter" name="brand" disabled>
-        <option value="all" selected class="wvpfpff-disabled">Brand</option>
+        <option value="all" selected class="wvpfpff-disabled wvpfpff-bold">Brand</option>
         <option value="all">All Brands</option>
         <!-- Options for brands will be loaded dynamically using JavaScript -->
     </select>

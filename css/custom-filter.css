@@ -42,6 +42,11 @@
 .wvpfpff-disabled {
     pointer-events: none;
 }
+
+.wvpfpff-bold {
+    font-weight: bold;
+}
+
 .wvpfpff-unclickable {
     pointer-events: none;
     cursor: default;
