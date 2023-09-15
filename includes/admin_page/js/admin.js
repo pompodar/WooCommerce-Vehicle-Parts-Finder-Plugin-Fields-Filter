@@ -23,7 +23,7 @@ jQuery(document).ready(function ($) {
                 form.find(".wvpfppff-admin-spinner-models").show();
 
                 sortableList.find(".sortable-item").each(function () {
-                    order.push($(this).text());
+                    order.push($(this).data().model);
                 });
 
                 // Send the updated order via AJAX

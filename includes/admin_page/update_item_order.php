@@ -20,7 +20,7 @@ function wvpfpff_plugin_update_model_item_order() {
     if (isset($_POST['new_order'])) {
         $make = $_POST['make'];
         $new_order = $_POST['new_order'];
-        $option_name = 'wvpfpff_plugin_' . $make . 'models_item_order';
+        $option_name = 'wvpfpff_plugin_' . $make . '_models_item_order';
         update_option($option_name, $new_order);
         
         // Return a success response

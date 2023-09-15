@@ -92,13 +92,13 @@ function custom_filter_itself_ajax_handler() {
 
                     // Check Model Order By value
                     if ($model_order_by == 'custom' && $filter == 'model') {
-                        $option_name = 'wvpfpff_plugin_' . $parent_term->name . 'models_item_order';
+                        $option_name = 'wvpfpff_plugin_' . $parent_term->name . '_models_item_order';
                         
                         $options_array = get_option($option_name, array());
                         
                         foreach ($options_array as $option) {
                             // Display child term information
-                            $options[] = '<option value="' . esc_attr($option) . '">' . esc_html($option) . '</option>';
+                            $options[] = '<option value="' . esc_attr(get_term($option, 'product_make')->name) . '">' . esc_html(get_term($option, 'product_make')->name) . '</option>';
                          }
                     } else {
                         if (!empty($child_terms) && !is_wp_error($child_terms)) {
