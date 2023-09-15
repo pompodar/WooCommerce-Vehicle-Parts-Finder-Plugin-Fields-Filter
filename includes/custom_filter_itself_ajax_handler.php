@@ -246,8 +246,8 @@ function custom_filter_itself_ajax_handler() {
 
                     // Sort the array by custom order
                     for($i = 0; $i < count($custom_ordered_cats); $i++) {   
-                        if(in_array($custom_ordered_cats[$i], $unique_category_names)) {
-                            $sorted_options[] = $custom_ordered_cats[$i];
+                        if(in_array(get_term($custom_ordered_cats[$i], 'product_cat')->name, $unique_category_names)) {
+                            $sorted_options[] = get_term($custom_ordered_cats[$i], 'product_cat')->name;
                         }
                     }    
                     

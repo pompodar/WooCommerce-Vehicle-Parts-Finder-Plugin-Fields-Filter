@@ -75,7 +75,7 @@ jQuery(document).ready(function ($) {
             $(".wvpfppff-admin-spinner-categories").show();
 
             sortableList.find(".sortable-item").each(function () {
-                order.push($(this).text());
+                order.push($(this).data().category);
             });
 
             // Send the updated order via AJAX
@@ -126,7 +126,6 @@ jQuery(document).ready(function ($) {
 
             sortableList.find(".sortable-item").each(function () {
                 order.push($(this).data().product);
-                console.log($(this).data().product);
             });
 
             // Send the updated order via AJAX
