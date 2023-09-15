@@ -25,16 +25,20 @@ function wvpfpff_plugin_render_admin_page() {
     ));
 
     $parent_term_names = array();
+    $parent_term_ids = array();
 
     if (!empty($parent_terms) && !is_wp_error($parent_terms)) {
         foreach ($parent_terms as $parent_term) {
-            $parent_term_name = preg_replace('/[^a-zA-Z0-9]+/', ' ', str_replace('andamp', 'and', str_replace('&', 'and', $parent_term->name)));;
+            $parent_term_name = $parent_term->name;
+            $parent_term_id = $parent_term->term_id;
+            
             $parent_term_names[] = $parent_term_name;
+            $parent_term_ids[] = $parent_term_id;
         }
     }
 
     // Retrieve possibly updated data
-    $new_order = $parent_term_names;
+    $new_order = $parent_term_ids;
 
     // Check for additions (items in new order but not in the current order)
     $added_items = array_diff($new_order, $current_order);
@@ -58,7 +62,7 @@ function wvpfpff_plugin_render_admin_page() {
     if (!(count( $added_items ) == count( $removed_items ) && !array_diff( $added_items, $removed_items ))) {
         if (!empty($added_items)) {
             echo '<div class="update bad-news">';
-            echo '<p>Added items for makes: ' . implode(', ', $added_items) . '</p>';
+            echo '<p>Added items for makes (ids): ' . implode(', ', $added_items) . '</p>';
             echo '</div>';
         } else {
             echo '<div class="update good-news">';
@@ -67,7 +71,7 @@ function wvpfpff_plugin_render_admin_page() {
         }
         if (!empty($removed_items)) {
             echo '<div class="update bad-news">';
-            echo '<p>Removed items for makes: ' . implode(', ', $removed_items) . '</p>';
+            echo '<p>Removed items for makes (ids): ' . implode(', ', $removed_items) . '</p>';
             echo '</div>';
         } else {
             echo '<div class="update good-news">';
@@ -93,21 +97,19 @@ function wvpfpff_plugin_render_admin_page() {
     if (!empty($current_order)) {
         foreach ($current_order as $index => $item) {
             // Use the $index as the ID for the list item
-            echo '<li class="sortable-item" id="' . esc_attr($index) . '">' . esc_html($item) . '</li>';
+            echo '<li data-make="' . esc_html($item) . '" class="sortable-item" id="' . esc_attr($index) . '">' . esc_html($item) . '</li>';
         }
     } else {
         foreach ($new_order as $index => $item) {
             // Use the $index as the ID for the list item
-            echo '<li class="sortable-item" id="' . esc_attr($index) . '">' . esc_html($item)
-. '</li>';
-}
-}
-
-echo '</ul>';
-echo '</form>';
-echo '</div>';
-echo '
-<hr />';
+            echo '<li data-category="' . esc_attr($parent_term_ids[$index]) . '" class="sortable-item" id="' . esc_attr($index) . '">' . esc_html($item) . '</li>';
+        }
+    }
+    echo '</ul>';
+    echo '</form>';
+    echo '</div>';
+    echo '
+    <hr />';
 
     // Models
     if (!empty($parent_terms) && !is_wp_error($parent_terms)) {
@@ -168,7 +170,7 @@ echo '
         if (!(count( $added_items ) == count( $removed_items ) && !array_diff( $added_items, $removed_items ))) {
             if (!empty($added_items)) {
             echo '<div class="update bad-news">';
-                echo '<p>Added items for models: ' . implode(', ', $added_items) . '</p>';
+                echo '<p>Added items for models (ids): ' . implode(', ', $added_items) . '</p>';
                 echo '</div>';
             } else {
             echo '<div class="update good-news">';
@@ -178,7 +180,7 @@ echo '
             
             if (!empty($removed_items)) {
             echo '<div class="update bad-news">';
-                echo '<p>Removed items for models: ' . implode(', ', $removed_items) . '</p>';
+                echo '<p>Removed items for models (ids): ' . implode(', ', $removed_items) . '</p>';
             echo '</div>';
             } else {
             echo '<div class="update good-news">';
@@ -211,7 +213,7 @@ echo '
                 } else {
                 foreach ($new_order as $index => $item) {
                     // Use the $index as the ID for the list item
-                    echo '<li data-model="' . esc_attr($child_term_ids[$index]) . '" class="sortable-item" id="' . esc_attr($index) . '">' . esc_html($item) . '</li>';
+                    echo '<li data-model="' . esc_attr($child_term_ids[$index]) . '" class="sortable-item" id="' . esc_attr($index) . '">' . get_term($item, 'product_make')->name . '</li>';
                 }
             }
             echo '</ul>';
@@ -270,7 +272,7 @@ echo '
         if (!(count( $added_items ) == count( $removed_items ) && !array_diff( $added_items, $removed_items ))) {
             if (!empty($added_items)) {
             echo '<div class="update bad-news">';
-                echo '<p>Added items for categories: ' . implode(', ', $added_items) . '</p>';
+                echo '<p>Added items for categories (ids): ' . implode(', ', $added_items) . '</p>';
                 echo '</div>';
             } else {
             echo '<div class="update good-news">';
@@ -280,7 +282,7 @@ echo '
     
             if (!empty($removed_items)) {
                 echo '<div class="update bad-news">';
-                echo '<p>Removed items for categories: ' . implode(', ', $removed_items) . '</p>';
+                echo '<p>Removed items for categories (ids): ' . implode(', ', $removed_items) . '</p>';
                 echo '</div>';
             } else {
                 echo '<div class="update good-news">';
@@ -311,7 +313,7 @@ echo '
                 } else {
                 foreach ($new_order as $index => $item) {
                     // Use the $index as the ID for the list item
-                    echo '<li data-category="' . esc_attr($products_cats_ids[$index]) . '"class="sortable-item" id="' . esc_attr($index) . '">' . esc_html($item) . '</li>';
+                    echo '<li data-category="' . esc_attr($products_cats_ids[$index]) . '" class="sortable-item" id="' . esc_attr($index) . '">' . esc_html($item) . '</li>';
                 }
             }
             echo '</ul>';
@@ -371,7 +373,7 @@ echo '
             if (!(count( $added_items ) == count( $removed_items ) && !array_diff( $added_items, $removed_items ))) {
                 if (!empty($added_items)) {
                 echo '<div class="update bad-news">';
-                    echo '<p>Added items for brands: ' . implode(', ', $added_items) . '</p>';
+                    echo '<p>Added items for brands (ids): ' . implode(', ', $added_items) . '</p>';
                 echo '</div>';
                 } else {
                 echo '<div class="update good-news">';
@@ -380,7 +382,7 @@ echo '
                 }
                 if (!empty($removed_items)) {
                 echo '<div class="update bad-news">';
-                    echo '<p>Removed items for brands: ' . implode(', ', $removed_items) . '</p>';
+                    echo '<p>Removed items for brands (ids): ' . implode(', ', $removed_items) . '</p>';
                 echo '</div>';
                 } else {
                 echo '<div class="update good-news">';
